@@ -57,6 +57,7 @@ const onSubmit = async (formData: form) => {
         method: "post",
         body: formData,
       });
+
       if (callback?.error) {
         notify({
           title: "Error",
@@ -64,7 +65,14 @@ const onSubmit = async (formData: form) => {
         });
       }
       if (callback?.id) {
-        router.push("/conversations");
+        notify({
+          text: "Registration success",
+          type: "success",
+        });
+        isLoading.value = false;
+        variant.value = "LOGIN";
+
+        //reset("myForm");
       }
     } catch (error) {
       notify({
