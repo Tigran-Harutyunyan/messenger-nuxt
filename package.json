@@ -15,12 +15,14 @@
     "@sidebase/nuxt-auth": "0.6.5",
     "@tailwindcss/forms": "^0.5.7",
     "nuxt": "^3.9.3",
+    "nuxt-headlessui": "^1.1.5",
     "typescript": "^5.3.3",
     "vue": "^3.4.14",
     "vue-router": "^4.2.5"
   },
   "dependencies": {
     "@formkit/nuxt": "^1.5.9",
+    "@next-auth/prisma-adapter": "^1.0.7",
     "@nuxtjs/cloudinary": "^2.5.2",
     "@pinia/nuxt": "^0.5.1",
     "@prisma/client": "^5.9.1",
