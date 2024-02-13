@@ -1,12 +1,12 @@
 export const useConversation = () => {
-    const params = useRoute().query;
 
     const conversationId = computed(() => {
-        if (params?.conversationId) {
+
+        if (!useRoute().params?.conversationId) {
             return '';
         }
 
-        return params?.conversationId as string;
+        return useRoute().params?.conversationId as string;
     });
 
     const isOpen = computed(() => !!conversationId.value);
