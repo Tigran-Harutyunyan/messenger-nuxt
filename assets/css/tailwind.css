@@ -1,0 +1,104 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+:root {
+  --n-border-active: 1px solid #005fcc;
+  --n-border-focus: 1px solid #005fcc;
+  --n-border-hover: 1px solid #005fcc;
+}
+
+.formkit-input[type="text"],.formkit-input[type="password"], .formkit-input[type="email"]   {
+  @apply form-input block w-full rounded-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300
+  placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-sky-600
+  sm:text-sm sm:leading-6
+}
+
+.formkit-input[type="submit"] {
+ @apply  
+ flex 
+ justify-center 
+ rounded-md 
+ px-3 
+ py-2 
+ text-sm 
+ font-semibold 
+ focus-visible:outline 
+ focus-visible:outline-2 
+ focus-visible:outline-offset-2 
+  w-full text-white bg-sky-500 hover:bg-sky-600 focus-visible:outline-sky-600
+}
+
+.formkit-input[type="submit"]:disabled {
+  @apply opacity-50 cursor-default
+}
+.submit-block .formkit-messages{
+  display: none;
+}
+
+[data-invalid] .formkit-input {
+  @apply focus:ring-rose-500
+}
+ 
+[data-invalid] .formkit-input {
+  @apply focus:ring-rose-500
+}
+
+.formkit-input[type="text"]:disabled {
+  @apply opacity-50 cursor-default
+}
+
+.formkit-message {
+  @apply text-red-500 text-xs mt-1
+}
+
+.formkit-label{
+  @apply  block  text-sm  font-medium  leading-6  text-gray-900 mb-1.5
+}
+.formkit-form {
+  @apply space-y-6
+}
+
+html,
+body,
+:root {
+  height: 100%;
+}
+body > div:first-of-type {
+  height: 100%;
+}
+
+.n-notification__avatar {
+  top: 50% !important;
+  bottom: 50% !important;
+  transform: translate(0, -50%) !important;
+  left: 10px !important;
+}
+
+.n-base-selection--multiple {
+  box-shadow: none !important ;
+  border-radius: 0.375rem;
+  padding-top: 2px !important;
+  padding-bottom: 2px !important;
+}
+.n-base-selection--multiple:focus,.n-base-selection--multiple:focus-visible {
+ border: 2px solid #0484c7 !important
+}
+
+.n-base-selection--active .n-base-selection-tags{
+  box-shadow: none !important;
+}
+
+.n-base-selection:not(.n-base-selection--disabled).n-base-selection--active .n-base-selection__state-border {
+  box-shadow: none !important;
+  border: 2px solid #0484c7 !important
+}
+
+.n-base-selection--multiple:hover .n-base-selection__state-border {
+  border-width: 2px !important; 
+  border-color: #0484c7 !important;
+}
+
+.n-base-select-option__content {
+  color: #0484c7
+}
