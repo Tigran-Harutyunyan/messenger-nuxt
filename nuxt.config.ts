@@ -1,7 +1,7 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
   devtools: { enabled: true },
-  modules: ['@nuxtjs/tailwindcss', '@sidebase/nuxt-auth', 'nuxt-headlessui', 'nuxt3-notifications', '@pinia/nuxt', '@nuxtjs/cloudinary', '@formkit/nuxt', '@nuxt/image'],
+  modules: ['@nuxtjs/tailwindcss', '@sidebase/nuxt-auth', 'nuxt-headlessui', '@pinia/nuxt', '@nuxtjs/cloudinary', '@formkit/nuxt', '@nuxt/image', '@bg-dev/nuxt-naiveui'],
   runtimeConfig: {
     public: {},
     githubClientId: process.env.GITHUB_CLIENT_ID,
@@ -19,4 +19,12 @@ export default defineNuxtConfig({
     // Experimental support for auto loading (see note):
     autoImport: true
   },
+  experimental: {
+    renderJsonPayloads: false,
+  },
+  // image: {
+  //   domains: ['res.cloudinary.com',
+  //     'avatars.githubusercontent.com',
+  //     'lh3.googleusercontent.com']
+  // }
 })
