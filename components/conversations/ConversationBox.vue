@@ -32,13 +32,13 @@ const lastMessage = computed(() => {
 const userEmail = computed(() => session?.value?.user?.email);
 
 const hasSeen = computed(() => {
-  if (!lastMessage) {
+  if (!lastMessage.value) {
     return false;
   }
 
-  const seenArray = lastMessage.seen || [];
+  const seenArray = lastMessage.value.seen || [];
 
-  if (!userEmail) {
+  if (!userEmail.value) {
     return false;
   }
 
