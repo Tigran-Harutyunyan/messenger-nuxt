@@ -4,7 +4,8 @@ import GithubIcon from "@/components/ui/icons/GithubIcon.vue";
 import GoogleIcon from "@/components/ui/icons/GoogleIcon.vue";
 import { reset } from "@formkit/core";
 
-const { notify } = useNotification();
+import { useNotification } from "naive-ui";
+const notification = useNotification();
 
 type Variant = "LOGIN" | "REGISTER";
 const variant = ref<Variant>("LOGIN");
@@ -27,10 +28,10 @@ const socialAction = (action: string) => {
   signIn(action, { redirect: false })
     .then((callback) => {
       if (callback?.error) {
-        notify({
-          title: "Error",
-          text: "Invalid credentials!",
-          type: "error",
+        notification.error({
+          content: "Invalid credentials!",
+          duration: 2500,
+          keepAliveOnHover: true,
         });
       }
 
@@ -59,15 +60,17 @@ const onSubmit = async (formData: form) => {
       });
 
       if (callback?.error) {
-        notify({
-          title: "Error",
-          text: callback?.error,
+        notification.error({
+          content: callback?.error,
+          duration: 2500,
+          keepAliveOnHover: true,
         });
       }
       if (callback?.id) {
-        notify({
-          text: "Registration success",
-          type: "success",
+        notification.success({
+          content: "Registration success",
+          duration: 2500,
+          keepAliveOnHover: true,
         });
         isLoading.value = false;
         variant.value = "LOGIN";
@@ -75,10 +78,10 @@ const onSubmit = async (formData: form) => {
         //reset("myForm");
       }
     } catch (error) {
-      notify({
-        title: "Registration error",
-        text: error?.statusMessage || "Something went wrong",
-        type: "error",
+      notification.error({
+        content: error?.statusMessage || "Something went wrong",
+        duration: 2500,
+        keepAliveOnHover: true,
       });
     } finally {
       isLoading.value = false;
@@ -92,10 +95,10 @@ const onSubmit = async (formData: form) => {
     })
       .then((callback) => {
         if (callback?.error) {
-          notify({
-            title: "Sign in error",
-            text: callback?.error,
-            type: "error",
+          notification.error({
+            content: callback?.error,
+            duration: 2500,
+            keepAliveOnHover: true,
           });
         }
         if (callback?.id || (callback?.ok && callback?.error === null)) {

@@ -1,7 +1,10 @@
 <script setup lang="ts"></script>
 <template>
-  <NuxtLayout>
-    <NuxtPage />
-  </NuxtLayout>
-  <NuxtNotifications position="bottom right" :speed="500" />
+  <naive-config>
+    <n-notification-provider>
+      <NuxtLayout>
+        <NuxtPage />
+      </NuxtLayout>
+    </n-notification-provider>
+  </naive-config>
 </template>
