@@ -2,9 +2,8 @@
 import DesktopItem from "@/components/sidebar/DesktopItem.vue";
 import Avatar from "@/components/Avatar.vue";
 import { useRoutes } from "@/composables/useRoutes";
-
+import SettingsModal from "@/components/sidebar/SettingsModal.vue";
 const { signOut } = useAuth();
-// import SettingsModal from "./SettingsModal";
 
 import { type User } from "@prisma/client";
 
@@ -25,6 +24,11 @@ const onClick = (href: string) => {
 </script>
 
 <template>
+  <SettingsModal
+    :currentUser="currentUser"
+    :isOpen="isOpen"
+    @close="isOpen = false"
+  />
   <div
     class="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:w-20 xl:px-6 lg:overflow-y-auto lg:bg-white lg:border-r-[1px] lg:pb-4 lg:flex lg:flex-col justify-between"
   >
@@ -46,7 +50,7 @@ const onClick = (href: string) => {
         @click="isOpen = true"
         class="cursor-pointer hover:opacity-75 transition"
       >
-        <Avatar :user="currentUser" />
+        <Avatar :user="currentUser" v-if="currentUser" />
       </div>
     </nav>
   </div>
