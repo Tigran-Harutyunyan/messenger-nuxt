@@ -1,7 +1,9 @@
 <script setup lang="ts">
 definePageMeta({ middleware: "auth", layout: "conversations" });
-import type { Conversation, Message, User } from "@prisma/client";
-import type { FullConversationType } from "@/types";
+
+useHead({
+  title: "Conversation | Messenger",
+});
 
 import Header from "@/components/conversation/Header.vue";
 import Body from "@/components/conversation/Body.vue";

@@ -3,6 +3,10 @@ import AuthForm from "@/components/AuthForm.vue";
 
 definePageMeta({ middleware: "public" });
 
+useHead({
+  title: "Messenger",
+});
+
 const { status } = useAuth();
 </script>
 
