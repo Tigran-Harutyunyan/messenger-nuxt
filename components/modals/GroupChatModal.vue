@@ -21,6 +21,7 @@ const name = ref();
 const members = ref([]);
 
 const options = computed(() => {
+  if (!users) return [];
   return users.map((user) => ({
     value: user.id,
     label: user.name,
