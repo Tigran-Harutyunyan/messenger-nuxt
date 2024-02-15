@@ -23,11 +23,11 @@ const otherUser = useOtherUser(conversation, session);
 
 const { members } = storeToRefs(useActiveListStore());
 
-const isActive = members.value.indexOf(otherUser?.email) !== -1;
+const isActive = members.value.indexOf(otherUser.value?.email) !== -1;
 
 const statusText = computed(() => {
-  if (conversation.isGroup) {
-    return `${conversation.users.length} members`;
+  if (conversation?.isGroup) {
+    return `${conversation?.users.length} members`;
   }
 
   return isActive ? "Active" : "Offline";
@@ -51,7 +51,7 @@ const statusText = computed(() => {
         <HiChevronLeft size="32" />
       </NuxtLink>
 
-      <AvatarGroup :users="conversation.users" v-if="conversation.isGroup" />
+      <AvatarGroup :users="conversation?.users" v-if="conversation.isGroup" />
 
       <Avatar :user="otherUser" v-else />
 

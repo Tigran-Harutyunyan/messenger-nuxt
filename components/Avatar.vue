@@ -10,7 +10,9 @@ interface AvatarProps {
 
 const { user } = defineProps<AvatarProps>();
 
-const isActive = members.value.indexOf(user?.email!) !== -1;
+const isActive = computed(() => {
+  return members.value.indexOf(user?.email!) !== -1;
+});
 </script>
 
 <template>
