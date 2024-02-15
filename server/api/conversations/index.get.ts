@@ -1,14 +1,8 @@
-import { getServerSession } from '#auth';
 import prisma from "../../../libs/prismadb";
 import getCurrentUser from "@/actions/getCurrentUser";
 
 export default defineEventHandler(async (event) => {
 
-    const session = await getServerSession(event);
-
-    if (!session?.user?.email) {
-        return null;
-    }
     const currentUser = await getCurrentUser(event);
 
     try {
@@ -18,7 +12,7 @@ export default defineEventHandler(async (event) => {
             },
             where: {
                 userIds: {
-                    has: currentUser.id
+                    has: currentUser?.id
                 }
             },
             include: {
