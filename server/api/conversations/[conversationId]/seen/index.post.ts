@@ -1,5 +1,6 @@
 import { getServerSession } from '#auth'
 import prisma from "../../../../../libs/prismadb";
+import { pusherServer } from "../../../../../libs/pusher";
 import getCurrentUser from "@/actions/getCurrentUser";
 
 export default defineEventHandler(async (event) => {
@@ -70,10 +71,10 @@ export default defineEventHandler(async (event) => {
     });
 
     // Update all connections with new seen
-    //   await pusherServer.trigger(currentUser.email, 'conversation:update', {
-    //     id: conversationId,
-    //     messages: [updatedMessage]
-    //   });
+    await pusherServer.trigger(currentUser.email, 'conversation:update', {
+        id: conversationId,
+        messages: [updatedMessage]
+    });
 
     // If user has already seen the message, no need to go further
     if (lastMessage.seenIds.indexOf(currentUser.id) !== -1) {
@@ -81,7 +82,7 @@ export default defineEventHandler(async (event) => {
     }
 
     // Update last message seen
-    //await pusherServer.trigger(conversationId!, 'message:update', updatedMessage);
+    await pusherServer.trigger(conversationId!, 'message:update', updatedMessage);
 
 
     return 'Success';
