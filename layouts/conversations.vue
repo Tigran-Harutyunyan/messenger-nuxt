@@ -2,54 +2,50 @@
 import clsx from "clsx";
 import Sidebar from "@/components/sidebar/Sidebar.vue";
 import ConversationList from "@/components/conversations/ConversationList.vue";
-import { type User } from "@prisma/client";
-import { type FullConversationType } from "@/types";
+import MdOutlineGroupAdd from "@/components/ui/icons/MdOutlineGroupAdd.vue";
+import GroupChatModal from "@/components/modals/GroupChatModal.vue";
+
+const isModalOpen = ref(false);
 
 const isOpen = true;
-const users = ref<User[]>([]);
 
-const conversations = ref<FullConversationType[]>([]);
+const { data: conversations, pending } = useLazyAsyncData(
+  "conversations",
+  () => $fetch("/api/conversations"),
+  { server: false }
+);
 
-const loadingConversations = ref(true);
-const loadingUsers = ref(true);
-
-const getConversations = async () => {
-  let res: unknown;
-  res = await $fetch("/api/conversations");
-
-  if (res && Array.isArray(res)) {
-    conversations.value = res as FullConversationType[];
-  }
-
-  loadingConversations.value = false;
-};
-
-const getUsers = async () => {
-  let res: unknown;
-  res = await $fetch("/api/users");
-
-  if (res && Array.isArray(res)) {
-    users.value = res as User[];
-  }
-
-  loadingUsers.value = false;
-};
-
-getConversations();
-getUsers();
+const { data: users } = useLazyAsyncData("users", () => $fetch("/api/users"), {
+  server: false,
+});
 </script>
 
 <template>
+  <GroupChatModal
+    v-if="users"
+    :users="users"
+    :isOpen="isModalOpen"
+    @close="isModalOpen = false"
+  />
+
   <Sidebar>
-    <ClientOnly>
-      <ConversationList
-        v-if="!loadingUsers && !loadingConversations"
-        :users="users"
-        title="Messages"
-        :initialItems="conversations"
-      />
-    </ClientOnly>
-    <div :class="clsx('lg:pl-80 h-full lg:block', isOpen ? 'block' : 'hidden')">
+    <ConversationList
+      title="Messages"
+      :initialItems="conversations"
+      v-if="conversations"
+    >
+      <div
+        @click="isModalOpen = true"
+        class="rounded-full p-2 bg-gray-100 text-gray-600 cursor-pointer hover:opacity-75 transition"
+      >
+        <MdOutlineGroupAdd size="20" />
+      </div>
+    </ConversationList>
+
+    <div
+      :class="clsx('lg:pl-80 h-full lg:block', isOpen ? 'block' : 'hidden')"
+      v-show="!pending"
+    >
       <slot />
     </div>
   </Sidebar>
