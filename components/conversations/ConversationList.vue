@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import clsx from "clsx";
 import { type FullConversationType } from "../../types";
-import { find } from "lodash";
 import ConversationBox from "./ConversationBox.vue";
 import useConversation from "@/composables/useConversation";
 
@@ -38,7 +37,7 @@ const updateHandler = (conversation: FullConversationType) => {
 };
 
 const newHandler = (conversation: FullConversationType) => {
-  if (!find(items.value, { id: conversation.id })) {
+  if (!items.value.find((item) => item.id === conversation.id)) {
     items.value.push(conversation);
   }
 };

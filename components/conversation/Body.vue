@@ -1,7 +1,6 @@
 <script setup lang="ts">
 import { type FullMessageType } from "@/types";
 
-import { find } from "lodash";
 import MessageBox from "@/components/conversation/MessageBox.vue";
 import { useConversation } from "@/composables/useConversation";
 
@@ -27,8 +26,7 @@ const setSeen = async () => {
 
 const messageHandler = (message: FullMessageType) => {
   setSeen();
-
-  if (!find(messages.value, { id: message.id })) {
+  if (!messages.value.find((item) => item.id === message.id)) {
     messages.value.push(message);
   }
 
