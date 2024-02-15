@@ -11,10 +11,6 @@ interface IParams {
   conversationId: string;
 }
 
-const conversation = ref<FullConversationType>();
-
-const messages = ref<Message[]>([]);
-
 const loadingConversation = ref(true);
 
 const loadingMessages = ref(true);
@@ -24,46 +20,23 @@ const dataIsFetched = computed(() => {
 });
 const route = useRoute();
 
-const getConversation = async () => {
-  let res: unknown;
+const { data: conversation } = useLazyAsyncData(
+  "conversation",
+  () =>
+    $fetch(`/api/conversation?conversationId=${route.params?.conversationId}`),
+  { server: false }
+);
 
-  res = await $fetch(
-    `/api/conversation?conversationId=${route.params?.conversationId}`
-  );
-
-  if (res) {
-    conversation.value = res as FullConversationType;
-  }
-
-  loadingConversation.value = false;
-};
-
-const getMessages = async () => {
-  let res: unknown;
-  res = await $fetch(
-    `/api/messages?conversationId=${route.params?.conversationId}`
-  );
-
-  if (res) {
-    messages.value = res as Message[];
-  }
-
-  loadingMessages.value = false;
-};
-
-getConversation();
-getMessages();
+const { data: messages } = useLazyAsyncData(
+  "messages",
+  () => $fetch(`/api/messages?conversationId=${route.params?.conversationId}`),
+  { server: false }
+);
 </script>
 
 <template>
-  <div class="h-full" v-if="!conversation && dataIsFetched">
-    <div class="h-full flex flex-col">
-      <EmptyState />
-    </div>
-  </div>
-
-  <div class="h-full" v-if="conversation && dataIsFetched">
-    <div class="h-full flex flex-col">
+  <div class="h-screen">
+    <div class="h-screen flex flex-col" v-if="conversation && messages">
       <Header :conversation="conversation" />
       <Body :initialMessages="messages" />
       <Form />
