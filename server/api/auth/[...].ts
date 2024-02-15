@@ -5,19 +5,20 @@ import { NuxtAuthHandler } from '#auth';
 import { compare } from "bcrypt-ts";
 import prisma from "../../../libs/prismadb";
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
+
 export default NuxtAuthHandler({
     adapter: PrismaAdapter(prisma),
-    secret: useRuntimeConfig().nuxtSecret || 'my-auth-secret',
+    secret: process.env.NUXTAUTH_SECRET,
     providers: [
         // @ts-expect-error You need to use .default here for it to work during SSR. May be fixed via Vite at some point
         GithubProvider.default({
-            clientId: useRuntimeConfig().githubClientId || 'enter-your-client-id-here',
-            clientSecret: useRuntimeConfig().githubClientSecret || 'enter-your-client-secret-here'
+            clientId: process.env.GITHUB_CLIENT_ID,
+            clientSecret: process.env.GITHUB_CLIENT_SECRET
         }),
         // @ts-expect-error You need to use .default here for it to work during SSR. May be fixed via Vite at some point 
         GoogleProvider.default({
-            clientId: process.env.GOOGLE_CLIENT_ID || 'enter-your-client-id-here',
-            clientSecret: process.env.GOOGLE_CLIENT_SECRET || 'enter-your-client-secret-here'
+            clientId: process.env.GOOGLE_CLIENT_ID,
+            clientSecret: process.env.GOOGLE_CLIENT_SECRET
         }),
         // @ts-expect-error You need to use .default here for it to work during SSR. May be fixed via Vite at some point
         CredentialsProvider.default({
