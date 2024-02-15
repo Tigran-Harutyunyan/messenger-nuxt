@@ -1,8 +1,11 @@
 <script setup lang="ts">
 import { type FullMessageType } from "@/types";
+
 import { find } from "lodash";
 import MessageBox from "@/components/conversation/MessageBox.vue";
 import { useConversation } from "@/composables/useConversation";
+
+const { pusherClient } = useNuxtApp();
 
 interface BodyProps {
   initialMessages: FullMessageType[];
@@ -16,10 +19,45 @@ const bottomRef = ref(null);
 
 const { conversationId } = useConversation();
 
-onMounted(() => {
-  const res = $fetch(`/api/conversations/${conversationId.value}/seen`, {
+const setSeen = async () => {
+  $fetch(`/api/conversations/${conversationId.value}/seen`, {
     method: "POST",
   });
+};
+
+const messageHandler = (message: FullMessageType) => {
+  setSeen();
+
+  if (!find(messages.value, { id: message.id })) {
+    messages.value.push(message);
+  }
+
+  bottomRef.value?.scrollIntoView();
+};
+
+const updateMessageHandler = (newMessage: FullMessageType) => {
+  messages.value.map((currentMessage) => {
+    if (currentMessage.id === newMessage.id) {
+      return newMessage;
+    }
+
+    return currentMessage;
+  });
+};
+
+onMounted(() => {
+  setSeen();
+  pusherClient.subscribe(conversationId.value);
+  bottomRef.value?.scrollIntoView();
+
+  pusherClient.bind("messages:new", messageHandler);
+  pusherClient.bind("message:update", updateMessageHandler);
+});
+
+onUnmounted(() => {
+  pusherClient.unsubscribe(conversationId.value);
+  pusherClient.unbind("messages:new", messageHandler);
+  pusherClient.unbind("message:update", updateMessageHandler);
 });
 </script>
 
