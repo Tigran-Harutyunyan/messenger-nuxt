@@ -19,6 +19,9 @@ export const useActiveListStore = defineStore("main", () => {
 
 
   return {
-    members
+    members,
+    add,
+    remove,
+    set
   };
 });
