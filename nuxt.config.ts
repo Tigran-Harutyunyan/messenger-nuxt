@@ -28,9 +28,27 @@ export default defineNuxtConfig({
   experimental: {
     renderJsonPayloads: false,
   },
-  // image: {
-  //   domains: ['res.cloudinary.com',
-  //     'avatars.githubusercontent.com',
-  //     'lh3.googleusercontent.com']
-  // }
+  app: {
+    head: {
+      charset: 'utf-16',
+      viewport: 'width=500, initial-scale=1',
+      title: 'Messenger with Nuxt3',
+      htmlAttrs: {
+        lang: 'en'
+      },
+      meta: [
+        { name: 'description', content: 'Messenger with Nuxt.js.' },
+
+        { name: 'keywords', content: 'Nuxt Messenger' },
+      ],
+      link: [
+        { rel: 'icon', type: 'image/x-icon', href: 'https://static.xx.fbcdn.net/rsrc.php/ym/r/YQbyhl59TWY.ico' }
+      ]
+    },
+  },
+  image: {
+    domains: ['res.cloudinary.com',
+      'avatars.githubusercontent.com',
+      'lh3.googleusercontent.com']
+  }
 })
