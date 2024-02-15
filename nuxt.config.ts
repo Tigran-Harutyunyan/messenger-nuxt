@@ -3,10 +3,16 @@ export default defineNuxtConfig({
   devtools: { enabled: true },
   modules: ['@nuxtjs/tailwindcss', '@sidebase/nuxt-auth', 'nuxt-headlessui', '@pinia/nuxt', '@nuxtjs/cloudinary', '@formkit/nuxt', '@nuxt/image', '@bg-dev/nuxt-naiveui'],
   runtimeConfig: {
-    public: {},
+    public: {
+      pusherPublicAppKey: process.env.NUXT_PUBLIC_PUSHER_APP_KEY
+    },
     githubClientId: process.env.GITHUB_CLIENT_ID,
     githubClientSecret: process.env.GITHUB_CLIENT_SECRET,
-    nuxtSecret: process.env.NUXTAUTH_SECRET
+    nuxtSecret: process.env.NUXTAUTH_SECRET,
+    pusherSecret: process.env.PUSHER_SECRET,
+    pusherAppId: process.env.PUSHER_APP_ID,
+    pusherPublicAppKey: process.env.NUXT_PUBLIC_PUSHER_APP_KEY
+
   },
   auth: {
     provider: {
