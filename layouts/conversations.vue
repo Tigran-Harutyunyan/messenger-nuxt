@@ -21,6 +21,7 @@ const { data: users } = useLazyAsyncData("users", () => $fetch("/api/users"), {
 </script>
 
 <template>
+  <ActiveStatus />
   <GroupChatModal
     v-if="users"
     :users="users"
@@ -44,7 +45,7 @@ const { data: users } = useLazyAsyncData("users", () => $fetch("/api/users"), {
 
     <div
       :class="clsx('lg:pl-80 h-full lg:block', isOpen ? 'block' : 'hidden')"
-      v-show="!pending"
+      v-if="!pending"
     >
       <slot />
     </div>

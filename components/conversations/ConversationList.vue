@@ -87,7 +87,7 @@ onUnmounted(() => {
       )
     "
   >
-    <div class="px-5">
+    <div class="px-5 space-y-1">
       <div class="flex justify-between mb-4 pt-4">
         <div class="text-2xl font-bold text-neutral-800">Messages</div>
         <slot />

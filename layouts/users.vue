@@ -10,6 +10,7 @@ const { data: users } = useLazyAsyncData("users", () => $fetch("/api/users"), {
 </script>
 
 <template>
+  <ActiveStatus />
   <Sidebar>
     <UsersList :items="users" />
     <div :class="clsx('lg:pl-80 h-full lg:block', isOpen ? 'block' : 'hidden')">
