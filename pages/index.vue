@@ -18,7 +18,7 @@ const { status } = useAuth();
       <NuxtImg
         height="48"
         width="48"
-        class="mx-auto w-auto"
+        class="mx-auto"
         src="/images/logo.png"
         alt="Logo"
       />
