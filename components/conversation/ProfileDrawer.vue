@@ -31,8 +31,6 @@ const otherUser = useOtherUser(data, session);
 
 const { members } = storeToRefs(useActiveListStore());
 
-const isConfirmOpen = ref(false);
-
 const joinedDate = computed(() => {
   return format(new Date(otherUser.value.createdAt), "PP");
 });
@@ -41,14 +39,16 @@ const title = computed(() => {
   return data.name || otherUser.value.name;
 });
 
-const isActive = members.value.indexOf(otherUser.value?.email!) !== -1;
+const isActive = computed(() => {
+  return members.value.indexOf(otherUser.value?.email!) !== -1;
+});
 
 const statusText = computed(() => {
   if (data.isGroup) {
     return `${data.users.length} members`;
   }
 
-  return isActive ? "Active" : "Offline";
+  return isActive.value ? "Active" : "Offline";
 });
 
 const onCloseDrawer = () => {

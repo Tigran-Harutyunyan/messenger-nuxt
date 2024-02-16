@@ -28,14 +28,16 @@ const otherUser = useOtherUser(conversation, session);
 
 const { members } = storeToRefs(useActiveListStore());
 
-const isActive = members.value.indexOf(otherUser.value?.email) !== -1;
+const isActive = computed(() => {
+  return members.value.indexOf(otherUser.value?.email) !== -1;
+});
 
 const statusText = computed(() => {
   if (conversation?.isGroup) {
     return `${conversation?.users.length} members`;
   }
 
-  return isActive ? "Active" : "Offline";
+  return isActive.value ? "Active" : "Offline";
 });
 
 const renderIcon = (icon: Component) => {

@@ -3,7 +3,7 @@ import clsx from "clsx";
 import { format } from "date-fns";
 import AvatarGroup from "@/components/AvatarGroup.vue";
 import { useOtherUser } from "@/composables/useOtherUser";
-import type { Conversation, Message, User } from "@prisma/client";
+import type { User } from "@prisma/client";
 import type { FullConversationType } from "@/types";
 
 const { data: session } = useAuth();

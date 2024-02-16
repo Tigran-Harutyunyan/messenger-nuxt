@@ -16,10 +16,7 @@ const isOpen = true;
 
 const router = useRouter();
 
-const {
-  data: conversations,
-  pending,
-}: { data: FullConversationType[]; pending: boolean } = useLazyAsyncData(
+const { data: conversations, pending } = useLazyAsyncData(
   "conversations",
   () => $fetch("/api/conversations"),
   { server: false }
@@ -41,13 +38,15 @@ const updateHandler = (conversation: FullConversationType) => {
   items.value.forEach(
     (currentConversation: FullConversationType, index, arr) => {
       if (currentConversation.id === conversation.id) {
-        const messages = arr[index].messages;
-        if (
-          !conversation?.messages[0].sender &&
-          !arr[index].messages.find((msg) => msg.id === conversation.id)
-        ) {
-          const message = messages.find(
-            (msg) => msg.senderId === conversation?.messages[0].senderId
+        const currentMessages = arr[index].messages || [];
+        const newMessage = conversation?.messages[0];
+        const messageExists = currentMessages.find(
+          (msg) => msg.id === conversation.id
+        );
+
+        if (!newMessage.sender && !messageExists) {
+          const message = currentMessages.find(
+            (msg) => msg.senderId === newMessage.senderId
           );
           conversation.messages[0].sender = message?.sender;
           arr[index].messages = [
@@ -85,10 +84,11 @@ onMounted(() => {
   pusherClient.bind("conversation:remove", removeHandler);
 });
 
-onUnmounted(() => {
+onBeforeUnmount(() => {
   pusherClient.unsubscribe(pusherKey.value);
   pusherClient.unbind("conversation:new", newHandler);
   pusherClient.unbind("conversation:remove", removeHandler);
+  pusherClient.unbind("conversation:update", updateHandler);
 });
 </script>
 

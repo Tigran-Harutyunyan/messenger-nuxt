@@ -12,7 +12,7 @@ const { href, icon, active } = defineProps<MobileItemProps>();
 
 <template>
   <NuxtLink
-    @click="emit('click')"
+    @click="emit('click', href)"
     :href="href"
     :class="
       clsx(
