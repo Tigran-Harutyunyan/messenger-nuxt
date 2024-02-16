@@ -3,7 +3,7 @@ import type { Conversation, User } from "@prisma/client";
 import { format } from "date-fns";
 import Avatar from "@/components/Avatar.vue";
 import AvatarGroup from "@/components/AvatarGroup.vue";
-import ConfirmModal from "./ConfirmModal.vue";
+
 const emit = defineEmits(["close"]);
 
 import {
@@ -52,15 +52,11 @@ const statusText = computed(() => {
 });
 
 const onCloseDrawer = () => {
-  if (!isConfirmOpen.value) {
-    emit("close");
-  }
+  emit("close");
 };
 </script>
 
 <template>
-  <ConfirmModal :isOpen="isConfirmOpen" @closeConfirm="isConfirmOpen = false" />
-
   <TransitionRoot :show="isOpen" as="template">
     <Dialog as="div" class="relative z-50" @close="onCloseDrawer">
       <TransitionChild
@@ -122,65 +118,63 @@ const onCloseDrawer = () => {
                   <div class="relative mt-6 flex-1 px-4 sm:px-6">
                     <div class="flex flex-col items-center">
                       <div class="mb-2">
-                        <AvatarGroup :users="data.users" v-if="data.isGroup" />
-                        <Avatar :user="otherUser" v-else />
+                        <Avatar :user="otherUser" v-if="!data.isGroup" />
                       </div>
-                      <div>
-                        {{ title }}
-                      </div>
-                      <div class="text-sm text-gray-500">
-                        {{ statusText }}
-                      </div>
-                      <div class="flex gap-10 my-8">
-                        <div
-                          @click="isConfirmOpen = true"
-                          class="flex flex-col gap-3 items-center cursor-pointer hover:opacity-75"
-                        >
-                          <div
-                            class="w-10 h-10 bg-neutral-100 rounded-full flex items-center justify-center"
-                          >
-                            <svg
-                              stroke="currentColor"
-                              fill="currentColor"
-                              stroke-width="0"
-                              viewBox="0 0 512 512"
-                              height="20"
-                              width="20"
-                              xmlns="http://www.w3.org/2000/svg"
-                            >
-                              <path
-                                fill="none"
-                                d="M296 64h-80a7.91 7.91 0 00-8 8v24h96V72a7.91 7.91 0 00-8-8z"
-                              ></path>
-                              <path
-                                d="M432 96h-96V72a40 40 0 00-40-40h-80a40 40 0 00-40 40v24H80a16 16 0 000 32h17l19 304.92c1.42 26.85 22 47.08 48 47.08h184c26.13 0 46.3-19.78 48-47l19-305h17a16 16 0 000-32zM192.57 416H192a16 16 0 01-16-15.43l-8-224a16 16 0 1132-1.14l8 224A16 16 0 01192.57 416zM272 400a16 16 0 01-32 0V176a16 16 0 0132 0zm32-304h-96V72a7.91 7.91 0 018-8h80a7.91 7.91 0 018 8zm32 304.57A16 16 0 01320 416h-.58A16 16 0 01304 399.43l8-224a16 16 0 1132 1.14z"
-                              ></path>
-                            </svg>
-                          </div>
-                          <div class="text-sm font-light text-neutral-600">
-                            Delete
-                          </div>
+
+                      <template v-if="!data.isGroup">
+                        <div>{{ title }}</div>
+
+                        <div class="text-sm text-gray-500">
+                          {{ statusText }}
                         </div>
-                      </div>
+                      </template>
+
+                      <template v-else>
+                        <div>
+                          Group:
+                          <span class="font-semibold">{{ title }}</span>
+                        </div>
+
+                        <div class="text-sm text-gray-500 mt-2 mb-4">
+                          {{ statusText }}
+                        </div>
+                      </template>
+
                       <div class="w-full pb-5 pt-5 sm:px-0 sm:pt-0">
                         <dl class="space-y-8 px-4 sm:space-y-6 sm:px-6">
                           <div v-if="data.isGroup">
-                            <dt
-                              class="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0"
-                            >
-                              Emails
-                            </dt>
                             <dd
-                              class="mt-1 text-sm text-gray-900 sm:col-span-2"
+                              class="mt-1 text-sm text-gray-900 sm:col-span-2 flex flex-wrap"
                             >
-                              {{
-                                data.users.map((user) => user.email).join(", ")
-                              }}
+                              <div
+                                class="w-full relative flex items-center space-x-3 p-3 bg-white"
+                                v-for="user in data.users"
+                              >
+                                <div class="relative">
+                                  <Avatar :user="user" />
+                                </div>
+
+                                <div class="focus:outline-none">
+                                  <div
+                                    class="flex justify-between items-center mb-1"
+                                  >
+                                    <p
+                                      class="text-md font-medium text-gray-900"
+                                    >
+                                      {{ user.name }}
+                                    </p>
+                                  </div>
+                                  <p class="truncate text-sm text-gray-500">
+                                    {{ user.email }}
+                                  </p>
+                                </div>
+                              </div>
                             </dd>
                           </div>
+
                           <div v-if="!data.isGroup">
                             <dt
-                              class="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0"
+                              class="text-sm font-medium text-gray-500 sm:w-40 sm:flex-shrink-0 mt-4"
                             >
                               Email
                             </dt>
