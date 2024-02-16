@@ -7,6 +7,11 @@ interface MessageInputProps {
 }
 const modelValue = defineModel();
 const { placeholder, id, type } = defineProps<MessageInputProps>();
+
+const inputRef = ref(null);
+onMounted(() => {
+  inputRef?.value.focus();
+});
 </script>
 
 <template>
@@ -15,6 +20,7 @@ const { placeholder, id, type } = defineProps<MessageInputProps>();
       :id="id"
       v-model="modelValue"
       :type="type"
+      ref="inputRef"
       autoComplete="off"
       :placeholder="placeholder"
       :required="required"
