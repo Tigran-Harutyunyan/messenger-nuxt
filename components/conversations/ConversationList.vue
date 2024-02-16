@@ -4,67 +4,12 @@ import { type FullConversationType } from "../../types";
 import ConversationBox from "./ConversationBox.vue";
 import useConversation from "@/composables/useConversation";
 
-const { pusherClient } = useNuxtApp();
-
 interface ConversationListProps {
-  initialItems: FullConversationType[];
-  title?: string;
+  items: FullConversationType[];
 }
-
-const { initialItems } = defineProps<ConversationListProps>();
-
-const { data: session } = useAuth();
+const { items } = defineProps<ConversationListProps>();
 
 const { conversationId, isOpen } = useConversation();
-
-const items = ref(initialItems);
-
-const pusherKey = computed(() => {
-  return session?.value?.user?.email;
-});
-
-const updateHandler = (conversation: FullConversationType) => {
-  items.value = items.value.map((currentConversation) => {
-    if (currentConversation.id === conversation.id) {
-      return {
-        ...currentConversation,
-        messages: conversation.messages,
-      };
-    }
-
-    return currentConversation;
-  });
-};
-
-const newHandler = (conversation: FullConversationType) => {
-  if (!items.value.find((item) => item.id === conversation.id)) {
-    items.value.push(conversation);
-  }
-};
-
-const removeHandler = (conversation: FullConversationType) => {
-  items.value = [
-    ...items.value.filter((convo) => convo.id !== conversation.id),
-  ];
-};
-
-onMounted(() => {
-  if (!pusherKey.value) {
-    return;
-  }
-
-  pusherClient.subscribe(pusherKey.value);
-
-  pusherClient.bind("conversation:update", updateHandler);
-  pusherClient.bind("conversation:new", newHandler);
-  pusherClient.bind("conversation:remove", removeHandler);
-});
-
-onUnmounted(() => {
-  pusherClient.unsubscribe(pusherKey.value);
-  pusherClient.unbind("conversation:new", newHandler);
-  pusherClient.unbind("conversation:remove", removeHandler);
-});
 </script>
 
 <template>
