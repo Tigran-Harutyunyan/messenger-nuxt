@@ -14,6 +14,8 @@ const isModalOpen = ref(false);
 
 const isOpen = true;
 
+const router = useRouter();
+
 const {
   data: conversations,
   pending,
@@ -36,16 +38,26 @@ const pusherKey = computed(() => {
 });
 
 const updateHandler = (conversation: FullConversationType) => {
-  items.value = items.value.map((currentConversation: FullConversationType) => {
-    if (currentConversation.id === conversation.id) {
-      return {
-        ...currentConversation,
-        messages: conversation.messages,
-      };
+  items.value.forEach(
+    (currentConversation: FullConversationType, index, arr) => {
+      if (currentConversation.id === conversation.id) {
+        const messages = arr[index].messages;
+        if (
+          !conversation?.messages[0].sender &&
+          !arr[index].messages.find((msg) => msg.id === conversation.id)
+        ) {
+          const message = messages.find(
+            (msg) => msg.senderId === conversation?.messages[0].senderId
+          );
+          conversation.messages[0].sender = message?.sender;
+          arr[index].messages = [
+            ...arr[index].messages,
+            ...conversation?.messages,
+          ];
+        }
+      }
     }
-
-    return currentConversation;
-  });
+  );
 };
 
 const newHandler = (conversation: FullConversationType) => {
@@ -58,6 +70,7 @@ const removeHandler = (conversation: FullConversationType) => {
   items.value = [
     ...items.value.filter((convo) => convo.id !== conversation.id),
   ];
+  router.push("/conversations");
 };
 
 onMounted(() => {

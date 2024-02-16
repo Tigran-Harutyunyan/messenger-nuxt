@@ -45,7 +45,7 @@ const message = clsx(
     <div :class="body">
       <div class="flex items-center gap-1">
         <div class="text-sm text-gray-500">
-          {{ data.sender.name }}
+          {{ data?.sender?.name }}
         </div>
         <div class="text-xs text-gray-400">
           {{ format(new Date(data.createdAt), "p") }}

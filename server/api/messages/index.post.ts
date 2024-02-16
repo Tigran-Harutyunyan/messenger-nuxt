@@ -60,13 +60,13 @@ export default defineEventHandler(async (event) => {
                 users: true,
                 messages: {
                     include: {
-                        seen: true
+                        seen: true,
                     }
                 }
             }
         });
- 
-     
+
+
         await pusherServer.trigger(conversationId, 'messages:new', newMessage);
 
         const lastMessage = updatedConversation.messages[updatedConversation.messages.length - 1];
