@@ -50,7 +50,14 @@ const onClick = (href: string) => {
         @click="isOpen = true"
         class="cursor-pointer hover:opacity-75 transition"
       >
-        <Avatar :user="currentUser" v-if="currentUser" />
+        <ClientOnly>
+          <n-tooltip placement="top-start" trigger="hover">
+            <template #trigger>
+              <Avatar :user="currentUser" v-if="currentUser" />
+            </template>
+            <span v-if="currentUser">{{ currentUser.name }}</span>
+          </n-tooltip>
+        </ClientOnly>
       </div>
     </nav>
   </div>
