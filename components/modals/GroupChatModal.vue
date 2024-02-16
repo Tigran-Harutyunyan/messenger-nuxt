@@ -67,7 +67,7 @@ const onSubmit = async () => {
       });
     }
 
-    emit("close");
+    onClose();
   } catch (error) {
     notification.error({
       content: "Something went wrong!",
@@ -77,10 +77,15 @@ const onSubmit = async () => {
     isLoading.value = false;
   }
 };
+
+const onClose = () => {
+  members.value = [];
+  emit("close");
+};
 </script>
 
 <template>
-  <Modal :isOpen="isOpen" @close="emit('close')">
+  <Modal :isOpen="isOpen" @close="onClose">
     <form @submit.prevent="onSubmit">
       <div class="space-y-12">
         <div class="border-b border-gray-900/10 pb-12">
