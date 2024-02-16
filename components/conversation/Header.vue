@@ -7,6 +7,9 @@ import HiEllipsisHorizontal from "@/components/ui/icons/HiEllipsisHorizontal.vue
 import ProfileDrawer from "./ProfileDrawer.vue";
 import { useActiveListStore } from "@/stores/useActiveListStore";
 import { useOtherUser } from "@/composables/useOtherUser";
+import ConfirmModal from "./ConfirmModal.vue";
+import TrashIcon from "@/components/ui/icons/TrashIcon.vue";
+import InfoIcon from "@/components/ui/icons/InfoIcon.vue";
 
 interface HeaderProps {
   conversation: Conversation & {
@@ -16,6 +19,8 @@ interface HeaderProps {
 const { conversation } = defineProps<HeaderProps>();
 
 const drawerOpen = ref(false);
+
+const isConfirmOpen = ref(false);
 
 const { data: session } = useAuth();
 
@@ -32,9 +37,40 @@ const statusText = computed(() => {
 
   return isActive ? "Active" : "Offline";
 });
+
+const renderIcon = (icon: Component) => {
+  return () => {
+    return h(icon, null, {
+      default: () => h(icon),
+    });
+  };
+};
+const options = [
+  {
+    label: "Info",
+    key: "info",
+    icon: renderIcon(InfoIcon),
+  },
+  {
+    label: "Delete",
+    key: "delete",
+    icon: renderIcon(TrashIcon),
+  },
+];
+
+const handleSelect = (action: string) => {
+  if (action === "delete") {
+    isConfirmOpen.value = true;
+  }
+
+  if (action === "info") {
+    drawerOpen.value = true;
+  }
+};
 </script>
 
 <template>
+  <ConfirmModal :isOpen="isConfirmOpen" @closeConfirm="isConfirmOpen = false" />
   <ProfileDrawer
     :data="conversation"
     :isOpen="drawerOpen"
@@ -62,11 +98,15 @@ const statusText = computed(() => {
         </div>
       </div>
     </div>
-
-    <HiEllipsisHorizontal
-      size="32"
-      @click="drawerOpen = true"
-      class="text-sky-500 cursor-pointer hover:text-sky-600 transition"
-    />
+    <n-dropdown
+      :options="options"
+      placement="bottom-end"
+      @select="handleSelect"
+    >
+      <HiEllipsisHorizontal
+        size="32"
+        class="text-sky-500 cursor-pointer hover:text-sky-600 transition ellipsoid"
+      />
+    </n-dropdown>
   </div>
 </template>

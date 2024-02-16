@@ -102,3 +102,10 @@ body > div:first-of-type {
 .n-base-select-option__content {
   color: #0484c7
 }
+.ellipsoid {
+  outline: none !important;
+}
+
+.n-config-provider {
+  height: 100%;
+}
