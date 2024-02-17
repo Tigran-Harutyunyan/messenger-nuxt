@@ -3,6 +3,9 @@ import { type FullMessageType } from "@/types";
 
 import MessageBox from "@/components/conversation/MessageBox.vue";
 import { useConversation } from "@/composables/useConversation";
+import { useMainStore } from "@/stores/main";
+
+const { newMessagge } = storeToRefs(useMainStore());
 
 const { pusherClient } = useNuxtApp();
 
@@ -57,6 +60,19 @@ onUnmounted(() => {
   pusherClient.unbind("messages:new", messageHandler);
   pusherClient.unbind("message:update", updateMessageHandler);
 });
+
+watch(
+  () => newMessagge.value,
+  (message) => {
+    if (
+      conversationId.value === message?.conversationId &&
+      !messages.value.find((item) => item.id === message.id)
+    ) {
+      messages.value.push(message);
+      bottomRef.value?.scrollIntoView();
+    }
+  }
+);
 </script>
 
 <template>

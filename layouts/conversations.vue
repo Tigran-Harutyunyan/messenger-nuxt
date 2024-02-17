@@ -5,6 +5,9 @@ import ConversationList from "@/components/conversations/ConversationList.vue";
 import MdOutlineGroupAdd from "@/components/ui/icons/MdOutlineGroupAdd.vue";
 import GroupChatModal from "@/components/modals/GroupChatModal.vue";
 import { type FullConversationType } from "../types";
+import { useMainStore } from "@/stores/main";
+
+const { changeNewMessage } = useMainStore();
 
 const { data: session } = useAuth();
 
@@ -53,6 +56,8 @@ const updateHandler = (conversation: FullConversationType) => {
             ...arr[index].messages,
             ...conversation?.messages,
           ];
+
+          changeNewMessage(conversation.messages[0]);
         }
       }
     }

@@ -1,6 +1,6 @@
 import { defineStore } from "pinia";
 
-export const useActiveListStore = defineStore("main", () => {
+export const useActiveListStore = defineStore("activelist", () => {
   const members = ref<string[]>([]);
 
   function add(id: string) {
