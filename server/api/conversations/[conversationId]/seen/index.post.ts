@@ -71,7 +71,7 @@ export default defineEventHandler(async (event) => {
     });
 
     // Update all connections with new seen
-    await pusherServer.trigger(currentUser.email, 'conversation:update', {
+    pusherServer.trigger(currentUser.email, 'conversation:update', {
         id: conversationId,
         messages: [updatedMessage]
     });
@@ -82,7 +82,7 @@ export default defineEventHandler(async (event) => {
     }
 
     // Update last message seen
-    await pusherServer.trigger(conversationId!, 'message:update', updatedMessage);
+    pusherServer.trigger(conversationId!, 'message:update', updatedMessage);
 
 
     return 'Success';

@@ -54,7 +54,7 @@ export default defineEventHandler(async (event) => {
         });
 
 
-        // Update all connections with new conversation
+        //Update all connections with new conversation
         newConversation.users.forEach((user) => {
             if (user.email) {
                 pusherServer.trigger(user.email, 'conversation:new', newConversation);
@@ -105,7 +105,7 @@ export default defineEventHandler(async (event) => {
         }
     });
 
-    // Update all connections with new conversation
+    //Update all connections with new conversation
     newConversation.users.map((user) => {
         if (user.email) {
             pusherServer.trigger(user.email, 'conversation:new', newConversation);
