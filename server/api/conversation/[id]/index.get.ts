@@ -1,8 +1,9 @@
 import { getServerSession } from '#auth';
-import prisma from "../../../libs/prismadb";
+import prisma from "../../../../libs/prismadb";
+
 export default defineEventHandler(async (event) => {
 
-    const { conversationId } = getQuery(event);
+    const { id } = event.context.params;
 
     const session = await getServerSession(event);
 
@@ -13,7 +14,7 @@ export default defineEventHandler(async (event) => {
     try {
         const conversation = await prisma.conversation.findUnique({
             where: {
-                id: conversationId as string
+                id: id as string
             },
             include: {
                 users: true,

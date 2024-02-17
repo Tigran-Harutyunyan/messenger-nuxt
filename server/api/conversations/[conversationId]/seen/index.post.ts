@@ -2,6 +2,7 @@ import { getServerSession } from '#auth'
 import prisma from "../../../../../libs/prismadb";
 import { pusherServer } from "../../../../../libs/pusher";
 import getCurrentUser from "@/actions/getCurrentUser";
+import { triggerChunked } from "@/lib/utils";
 
 export default defineEventHandler(async (event) => {
     const { conversationId } = getRouterParams(event)
@@ -21,7 +22,6 @@ export default defineEventHandler(async (event) => {
             statusCode: 400,
         });
     }
-
 
     // Find existing conversation
     const conversation = await prisma.conversation.findUnique({
@@ -70,8 +70,8 @@ export default defineEventHandler(async (event) => {
         }
     });
 
-    // Update all connections with new seen
-    pusherServer.trigger(currentUser.email, 'conversation:update', {
+    // Update all connections with new seen  
+    triggerChunked(pusherServer, currentUser.email, "conversation-message", {
         id: conversationId,
         messages: [updatedMessage]
     });
@@ -82,8 +82,7 @@ export default defineEventHandler(async (event) => {
     }
 
     // Update last message seen
-    pusherServer.trigger(conversationId!, 'message:update', updatedMessage);
-
+    triggerChunked(pusherServer, conversationId!, "message:update", updatedMessage);
 
     return 'Success';
 });

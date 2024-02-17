@@ -29,7 +29,6 @@ const onDelete = async () => {
     .delete(`/api/conversations/${conversationId.value}`)
     .then(() => {
       emit("closeConfirm");
-      router.push("/conversations");
     })
     .catch(() => {
       notification.error({

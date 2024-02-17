@@ -36,11 +36,11 @@ const hasSeen = computed(() => {
     return false;
   }
 
-  const seenArray = lastMessage.value.seen || [];
-
   if (!userEmail.value) {
     return false;
   }
+
+  const seenArray = lastMessage.value.seen || [];
 
   return (
     seenArray.filter((user: User) => user.email === userEmail.value).length !==
@@ -59,6 +59,13 @@ const lastMessageText = computed(() => {
 
   return "Started a conversation";
 });
+
+watch(
+  () => data.messages,
+  () => {
+    console.log(""); // don`t delete console.
+  }
+);
 </script>
 
 <template>

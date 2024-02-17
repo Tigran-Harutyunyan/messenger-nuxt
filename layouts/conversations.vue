@@ -5,9 +5,7 @@ import ConversationList from "@/components/conversations/ConversationList.vue";
 import MdOutlineGroupAdd from "@/components/ui/icons/MdOutlineGroupAdd.vue";
 import GroupChatModal from "@/components/modals/GroupChatModal.vue";
 import { type FullConversationType } from "../types";
-import { useMainStore } from "@/stores/main";
-
-const { changeNewMessage } = useMainStore();
+import { bindWithChunking } from "@/lib/utils";
 
 const { data: session } = useAuth();
 
@@ -37,43 +35,54 @@ const pusherKey = computed(() => {
   return session?.value?.user?.email;
 });
 
-const updateHandler = (conversation: FullConversationType) => {
-  items.value.forEach(
-    (currentConversation: FullConversationType, index, arr) => {
-      if (currentConversation.id === conversation.id) {
-        const currentMessages = arr[index].messages || [];
-        const newMessage = conversation?.messages[0];
-        const messageExists = currentMessages.find(
-          (msg) => msg.id === conversation.id
-        );
+const swapArray = (
+  array: FullConversationType[],
+  indexA: number,
+  indexB: number
+) => {
+  const tmp = array[indexA];
+  array[indexA] = array[indexB];
+  array[indexB] = tmp;
+  return array;
+};
 
-        if (!newMessage.sender && !messageExists) {
-          const message = currentMessages.find(
-            (msg) => msg.senderId === newMessage.senderId
-          );
-          conversation.messages[0].sender = message?.sender;
-          arr[index].messages = [
-            ...arr[index].messages,
-            ...conversation?.messages,
+const updateHandler = async (conversation: FullConversationType) => {
+  let updateIndex = 0;
+  items.value.map((currentConversation, curreentIndex) => {
+    if (currentConversation.id === conversation.id) {
+      updateIndex = curreentIndex;
+
+      if (currentConversation.messages) {
+        let foundIndex;
+
+        currentConversation.messages.forEach((msg, index) => {
+          if (msg.id === conversation.messages[0].id) {
+            foundIndex = index;
+          }
+        });
+
+        if (foundIndex) {
+          currentConversation.messages[foundIndex] = conversation.messages[0];
+        } else {
+          currentConversation.messages = [
+            ...currentConversation.messages,
+            ...conversation.messages,
           ];
-
-          changeNewMessage(conversation.messages[0]);
         }
       }
     }
-  );
+    return currentConversation;
+  });
 };
 
-const newHandler = (conversation: FullConversationType) => {
+const newHandler = async (conversation: FullConversationType) => {
   if (!items.value.find((item) => item.id === conversation.id)) {
-    items.value.push(conversation);
+    items.value.unshift(conversation);
   }
 };
 
-const removeHandler = (conversation: FullConversationType) => {
-  items.value = [
-    ...items.value.filter((convo) => convo.id !== conversation.id),
-  ];
+const removeHandler = (conversationId: string) => {
+  items.value = [...items.value.filter((conv) => conv.id !== conversationId)];
   router.push("/conversations");
 };
 
@@ -82,10 +91,10 @@ onMounted(() => {
     return;
   }
 
-  pusherClient.subscribe(pusherKey.value);
+  const channel = pusherClient.subscribe(pusherKey.value);
 
-  pusherClient.bind("conversation:update", updateHandler);
-  pusherClient.bind("conversation:new", newHandler);
+  bindWithChunking(channel, "conversation:update", updateHandler);
+  bindWithChunking(channel, "conversation:new", newHandler);
   pusherClient.bind("conversation:remove", removeHandler);
 });
 

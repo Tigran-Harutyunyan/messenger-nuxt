@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { type FullMessageType } from "@/types";
-
+import { bindWithChunking } from "@/lib/utils";
 import MessageBox from "@/components/conversation/MessageBox.vue";
 import { useConversation } from "@/composables/useConversation";
 import { useMainStore } from "@/stores/main";
@@ -27,10 +27,16 @@ const setSeen = async () => {
   });
 };
 
-const messageHandler = (message: FullMessageType) => {
+const messageHandler = async (message: FullMessageType) => {
   setSeen();
-  if (!messages.value.find((item) => item.id === message.id)) {
+
+  if (
+    messages.value &&
+    !messages.value.find((item) => item.id === message.id)
+  ) {
     messages.value.push(message);
+  } else {
+    messages.value = [message];
   }
 
   bottomRef.value?.scrollIntoView();
@@ -48,11 +54,12 @@ const updateMessageHandler = (newMessage: FullMessageType) => {
 
 onMounted(() => {
   setSeen();
-  pusherClient.subscribe(conversationId.value);
-  bottomRef.value?.scrollIntoView();
 
-  pusherClient.bind("messages:new", messageHandler);
-  pusherClient.bind("message:update", updateMessageHandler);
+  const channel = pusherClient.subscribe(conversationId.value);
+  bindWithChunking(channel, "message:new", messageHandler);
+  bindWithChunking(channel, "message:update", updateMessageHandler);
+
+  bottomRef.value?.scrollIntoView();
 });
 
 onUnmounted(() => {

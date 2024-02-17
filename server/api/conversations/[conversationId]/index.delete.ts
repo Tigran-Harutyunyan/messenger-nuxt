@@ -4,8 +4,7 @@ import getCurrentUser from "@/actions/getCurrentUser";
 import { pusherServer } from "../../../../libs/pusher";
 
 export default defineEventHandler(async (event) => {
-    const { conversationId } = getRouterParams(event)
-
+    const { conversationId } = getRouterParams(event);
 
     const session = await getServerSession(event);
 
@@ -15,15 +14,13 @@ export default defineEventHandler(async (event) => {
 
     const currentUser = await getCurrentUser(event);
 
-
     if (!currentUser?.id) {
         throw createError({
             statusCode: 400,
         });
     }
+
     try {
-
-
         const existingConversation = await prisma.conversation.findUnique({
             where: {
                 id: conversationId
@@ -51,7 +48,7 @@ export default defineEventHandler(async (event) => {
 
         existingConversation.users.forEach((user) => {
             if (user.email) {
-                pusherServer.trigger(user.email, 'conversation:remove', existingConversation);
+                pusherServer.trigger(user.email, 'conversation:remove', existingConversation.id);
             }
         });
 
