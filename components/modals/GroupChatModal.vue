@@ -32,6 +32,7 @@ const onSubmit = async () => {
   if (!name.value) {
     notification.error({
       content: "Group name is required",
+      duration: 2500,
     });
     return;
   }
@@ -39,6 +40,7 @@ const onSubmit = async () => {
   if (members.value.length < 2) {
     notification.error({
       content: "Select at least two members to continue",
+      duration: 2500,
     });
     return;
   }
@@ -80,6 +82,7 @@ const onSubmit = async () => {
 
 const onClose = () => {
   members.value = [];
+  name.value = "";
   emit("close");
 };
 </script>
