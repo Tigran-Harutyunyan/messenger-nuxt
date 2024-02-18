@@ -62,11 +62,11 @@ const onDelete = async () => {
         </div>
       </div>
     </div>
-    <div class="mt-5 sm:mt-4 sm:flex sm:flex-row-reverse">
-      <Button :disabled="isLoading" danger @click="onDelete"> Delete </Button>
+    <div class="mt-5 sm:mt-4 sm:flex flex justify-end">
       <Button :disabled="isLoading" secondary @click="emit('closeConfirm')">
         Cancel
       </Button>
+      <Button :disabled="isLoading" danger @click="onDelete"> Delete </Button>
     </div>
   </Modal>
 </template>

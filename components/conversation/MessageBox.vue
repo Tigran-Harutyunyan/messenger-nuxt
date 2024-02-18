@@ -4,8 +4,6 @@ import Avatar from "@/components/Avatar.vue";
 import { format } from "date-fns";
 import { type FullMessageType } from "@/types";
 
-// import ImageModal from "./ImageModal";
-
 interface MessageBoxProps {
   data: FullMessageType;
   isLast?: boolean;
@@ -52,8 +50,6 @@ const message = clsx(
         </div>
       </div>
       <div :class="message">
-        <!-- <ImageModal :src="data.image" :isOpen="imageModalOpen" @close="imageModalOpen = false" /> -->
-
         <NuxtImg
           v-if="data.image"
           alt="Image"

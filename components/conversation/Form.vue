@@ -37,11 +37,15 @@ const onImageUpload = (img: string) => {
 
 const sendMessage = async (body: object) => {
   isPosting.value = true;
-  await $fetch("/api/messages", {
-    method: "POST",
-    body,
-  });
-  isPosting.value = false;
+  try {
+    await $fetch("/api/messages", {
+      method: "POST",
+      body,
+    });
+  } catch (error) {
+  } finally {
+    isPosting.value = false;
+  }
 };
 </script>
 
