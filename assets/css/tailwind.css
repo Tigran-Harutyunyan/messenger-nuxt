@@ -109,3 +109,7 @@ body > div:first-of-type {
 .n-config-provider {
   height: 100%;
 }
+
+.n-dropdown-option {
+  min-width: 200px; 
+}

@@ -130,18 +130,15 @@ const onCloseDrawer = () => {
                       </template>
 
                       <template v-else>
-                        <div>
-                          Group:
-                          <span class="font-semibold">{{ title }}</span>
-                        </div>
+                        <div class="font-semibold text-xl">{{ title }}</div>
 
-                        <div class="text-sm text-gray-500 mt-2 mb-4">
+                        <div class="text-sm text-gray-500 mt-1 mb-4">
                           {{ statusText }}
                         </div>
                       </template>
 
                       <div class="w-full pb-5 pt-5 sm:px-0 sm:pt-0">
-                        <dl class="space-y-8 px-4 sm:space-y-6 sm:px-6">
+                        <dl class="space-y-8 sm:space-y-6">
                           <div v-if="data.isGroup">
                             <dd
                               class="mt-1 text-sm text-gray-900 sm:col-span-2 flex flex-wrap"

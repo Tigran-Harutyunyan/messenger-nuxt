@@ -37,15 +37,24 @@ const onClick = (href: string) => {
   >
     <nav class="mt-4 flex flex-col justify-between">
       <ul role="list" class="flex flex-col items-center space-y-1">
-        <DesktopItem
+        <n-tooltip
+          placement="right-end"
+          trigger="hover"
+          :show-arrow="false"
           v-for="item in routes"
-          :key="item.label"
-          :href="item.href"
-          :label="item.label"
-          :icon="item.icon"
-          :active="item.active"
-          @click="onClick"
-        />
+        >
+          <template #trigger>
+            <DesktopItem
+              :key="item.label"
+              :href="item.href"
+              :label="item.label"
+              :icon="item.icon"
+              :active="item.active"
+              @click="onClick"
+            />
+          </template>
+          <span> {{ item.label }}</span>
+        </n-tooltip>
       </ul>
     </nav>
     <nav class="mt-4 flex flex-col justify-between items-center">
@@ -54,7 +63,7 @@ const onClick = (href: string) => {
         class="cursor-pointer hover:opacity-75 transition"
       >
         <ClientOnly>
-          <n-tooltip placement="top-start" trigger="hover">
+          <n-tooltip placement="right-end" trigger="hover" :show-arrow="false">
             <template #trigger>
               <Avatar :user="currentUser" v-if="currentUser" />
             </template>

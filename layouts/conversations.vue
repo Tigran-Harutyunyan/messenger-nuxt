@@ -147,12 +147,17 @@ onBeforeUnmount(() => {
 
   <Sidebar>
     <ConversationList :items="items" v-if="conversations">
-      <div
-        @click="isModalOpen = true"
-        class="rounded-full p-2 bg-gray-100 text-gray-600 cursor-pointer hover:opacity-75 transition"
-      >
-        <MdOutlineGroupAdd size="20" />
-      </div>
+      <n-tooltip placement="bottom-center" trigger="hover" :show-arrow="false">
+        <template #trigger>
+          <div
+            @click="isModalOpen = true"
+            class="rounded-full p-2 bg-gray-100 text-gray-600 cursor-pointer hover:opacity-75 transition"
+          >
+            <MdOutlineGroupAdd size="20" />
+          </div>
+        </template>
+        <span>Create a group chat </span>
+      </n-tooltip>
     </ConversationList>
 
     <div
