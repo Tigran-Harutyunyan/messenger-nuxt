@@ -48,27 +48,29 @@ const swapArray = (
 
 const updateHandler = async (conversation: FullConversationType) => {
   let updateIndex = 0;
-  items.value.map((currentConversation, curreentIndex) => {
+  items.value = items.value.map((currentConversation, curreentIndex) => {
     if (currentConversation.id === conversation.id) {
       updateIndex = curreentIndex;
 
-      if (currentConversation.messages) {
-        let foundIndex;
+      if (!currentConversation.messages) {
+        currentConversation.messages = [];
+      }
 
-        currentConversation.messages.forEach((msg, index) => {
-          if (msg.id === conversation.messages[0].id) {
-            foundIndex = index;
-          }
-        });
+      let foundIndex;
 
-        if (foundIndex) {
-          currentConversation.messages[foundIndex] = conversation.messages[0];
-        } else {
-          currentConversation.messages = [
-            ...currentConversation.messages,
-            ...conversation.messages,
-          ];
+      currentConversation.messages.forEach((msg, index) => {
+        if (msg.id === conversation.messages[0].id) {
+          foundIndex = index;
         }
+      });
+
+      if (foundIndex) {
+        currentConversation.messages[foundIndex] = conversation.messages[0];
+      } else {
+        currentConversation.messages = [
+          ...currentConversation.messages,
+          ...conversation.messages,
+        ];
       }
     }
     return currentConversation;
