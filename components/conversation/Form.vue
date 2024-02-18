@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import clsx from "clsx";
 import MessageInput from "@/components/conversation/MessageInput.vue";
 import { useConversation } from "@/composables/useConversation";
 import ImageUpload from "@/components/ImageUpload.vue";
@@ -10,6 +11,8 @@ const { showSettingsModal } = storeToRefs(useMainStore());
 const { conversationId } = useConversation();
 
 const message = ref("");
+
+const isPosting = ref(false);
 
 const onSubmit = async () => {
   if (!message.value.length) {
@@ -33,10 +36,12 @@ const onImageUpload = (img: string) => {
 };
 
 const sendMessage = async (body: object) => {
+  isPosting.value = true;
   await $fetch("/api/messages", {
     method: "POST",
     body,
   });
+  isPosting.value = false;
 };
 </script>
 
@@ -58,7 +63,14 @@ const sendMessage = async (body: object) => {
       />
       <button
         type="submit"
-        class="rounded-full p-2 bg-sky-500 cursor-pointer hover:bg-sky-600 transition"
+        :disabled="isPosting"
+        :class="
+          clsx(
+            'rounded-full p-2 bg-sky-500  hover:bg-sky-600 transition',
+            isPosting && 'cursor:not-allowed opacity-60',
+            !isPosting && 'cursor-pointer'
+          )
+        "
       >
         <HiPaperAirplane class="text-white" />
       </button>
