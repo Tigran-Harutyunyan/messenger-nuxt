@@ -2,7 +2,6 @@
 import type { Conversation, User } from "@prisma/client";
 import { format } from "date-fns";
 import Avatar from "@/components/Avatar.vue";
-import AvatarGroup from "@/components/AvatarGroup.vue";
 
 const emit = defineEmits(["close"]);
 
