@@ -107,7 +107,12 @@ const onClose = () => {
               v-model="name"
             />
 
-            <n-select v-model:value="members" multiple :options="options" />
+            <n-select
+              v-model:value="members"
+              multiple
+              :options="options"
+              clearable
+            />
           </div>
         </div>
       </div>
