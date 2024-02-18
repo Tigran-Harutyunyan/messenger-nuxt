@@ -13,8 +13,6 @@ const { data, isLast } = defineProps<MessageBoxProps>();
 
 const { data: session } = useAuth();
 
-const imageModalOpen = ref(false);
-
 const isOwn = session?.value?.user?.email === data?.sender?.email;
 
 const seenList = (data.seen || [])
@@ -55,7 +53,6 @@ const message = clsx(
           alt="Image"
           height="288"
           width="288"
-          @click="imageModalOpen = false"
           :src="data.image"
           class="object-cover cursor-pointer hover:scale-110 transition translate"
         />
