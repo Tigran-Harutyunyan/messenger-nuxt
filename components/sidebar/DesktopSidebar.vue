@@ -3,6 +3,11 @@ import DesktopItem from "@/components/sidebar/DesktopItem.vue";
 import Avatar from "@/components/Avatar.vue";
 import { useRoutes } from "@/composables/useRoutes";
 import SettingsModal from "@/components/sidebar/SettingsModal.vue";
+import { useMainStore } from "@/stores/main";
+const { toggleSettingsModal } = useMainStore();
+
+const { showSettingsModal } = storeToRefs(useMainStore());
+
 const { signOut } = useAuth();
 
 import { type User } from "@prisma/client";
@@ -11,8 +16,6 @@ interface DesktopSidebarProps {
   currentUser: User;
 }
 const routes = useRoutes();
-
-const isOpen = ref(false);
 
 const { currentUser } = defineProps<DesktopSidebarProps>();
 
@@ -26,8 +29,8 @@ const onClick = (href: string) => {
 <template>
   <SettingsModal
     :currentUser="currentUser"
-    :isOpen="isOpen"
-    @close="isOpen = false"
+    :isOpen="showSettingsModal"
+    @close="toggleSettingsModal(false)"
   />
   <div
     class="hidden lg:fixed lg:inset-y-0 lg:left-0 lg:z-40 lg:w-20 xl:px-6 lg:overflow-y-auto lg:bg-white lg:border-r-[1px] lg:pb-4 lg:flex lg:flex-col justify-between"
@@ -47,7 +50,7 @@ const onClick = (href: string) => {
     </nav>
     <nav class="mt-4 flex flex-col justify-between items-center">
       <div
-        @click="isOpen = true"
+        @click="toggleSettingsModal(true)"
         class="cursor-pointer hover:opacity-75 transition"
       >
         <ClientOnly>
@@ -55,7 +58,7 @@ const onClick = (href: string) => {
             <template #trigger>
               <Avatar :user="currentUser" v-if="currentUser" />
             </template>
-            <span v-if="currentUser">{{ currentUser.name }}</span>
+            <span v-if="currentUser"> Update profile</span>
           </n-tooltip>
         </ClientOnly>
       </div>

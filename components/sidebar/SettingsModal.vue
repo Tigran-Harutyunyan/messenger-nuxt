@@ -4,7 +4,10 @@ import Input from "@/components/inputs/Input.vue";
 import Modal from "@/components/modals/Modal.vue";
 import Button from "@/components/Button.vue";
 import { useNotification } from "naive-ui";
+
 const notification = useNotification();
+
+const { updateUser } = inject("user");
 
 interface SettingsModalProps {
   isOpen?: boolean;
@@ -14,7 +17,6 @@ interface SettingsModalProps {
 const { isOpen, currentUser } = defineProps<SettingsModalProps>();
 
 const emit = defineEmits(["close"]);
-const router = useRouter();
 
 const image = ref(currentUser?.image || "");
 const name = ref(currentUser?.name || "");
@@ -26,8 +28,6 @@ const onImageUpload = (result: string) => {
 };
 
 const onSubmit = async () => {
-  isLoading.value = true;
-
   if (!name.value) {
     notification.error({
       content: "Name field can't be blank.",
@@ -56,7 +56,10 @@ const onSubmit = async () => {
         duration: 2500,
         keepAliveOnHover: true,
       });
+
+      updateUser(response);
     }
+
     emit("close");
   } catch (error) {
     notification.error({
@@ -114,7 +117,12 @@ const onSubmit = async () => {
       </div>
 
       <div class="mt-6 flex items-center justify-end gap-x-6">
-        <Button :disabled="isLoading" secondary @click="emit('close')">
+        <Button
+          :disabled="isLoading"
+          secondary
+          type="button"
+          @click.stop="emit('close')"
+        >
           Cancel
         </Button>
         <Button :disabled="isLoading" type="submit">

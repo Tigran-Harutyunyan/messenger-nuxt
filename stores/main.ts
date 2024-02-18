@@ -1,15 +1,14 @@
 import { defineStore } from "pinia";
-import type { FullMessageType } from "@/types";
 
 export const useMainStore = defineStore("main", () => {
-  const newMessagge = ref<FullMessageType>();
+  const showSettingsModal = ref(false);
 
-  function changeNewMessage(message: FullMessageType) {
-    newMessagge.value = message;
+  function toggleSettingsModal(isOpen = false) {
+    showSettingsModal.value = isOpen;
   }
 
   return {
-    newMessagge,
-    changeNewMessage
+    showSettingsModal,
+    toggleSettingsModal
   };
 });

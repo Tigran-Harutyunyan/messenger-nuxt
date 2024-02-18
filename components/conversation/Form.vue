@@ -3,6 +3,9 @@ import MessageInput from "@/components/conversation/MessageInput.vue";
 import { useConversation } from "@/composables/useConversation";
 import ImageUpload from "@/components/ImageUpload.vue";
 import HiPaperAirplane from "~/components/ui/icons/HiPaperAirplane.vue";
+import { useMainStore } from "@/stores/main";
+
+const { showSettingsModal } = storeToRefs(useMainStore());
 
 const { conversationId } = useConversation();
 
@@ -21,6 +24,8 @@ const onSubmit = async () => {
 };
 
 const onImageUpload = (img: string) => {
+  if (showSettingsModal.value) return; // workaround
+
   sendMessage({
     conversationId: conversationId.value,
     image: img,
@@ -28,9 +33,7 @@ const onImageUpload = (img: string) => {
 };
 
 const sendMessage = async (body: object) => {
-  let response: unknown;
-
-  response = await $fetch("/api/messages", {
+  await $fetch("/api/messages", {
     method: "POST",
     body,
   });

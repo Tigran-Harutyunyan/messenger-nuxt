@@ -20,8 +20,6 @@ const { isOpen } = defineProps<ConfirmModalProps>();
 
 const isLoading = ref(false);
 
-const router = useRouter();
-
 const onDelete = async () => {
   isLoading.value = true;
 

@@ -69,7 +69,7 @@ onUnmounted(() => {
 });
 
 watch(
-  () => newMessagge.value,
+  () => newMessagge?.value,
   (message) => {
     if (
       conversationId.value === message?.conversationId &&

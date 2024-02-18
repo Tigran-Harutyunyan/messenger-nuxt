@@ -1,6 +1,7 @@
 
 import prisma from "../../../libs/prismadb";
 import getCurrentUser from "@/actions/getCurrentUser";
+import { pusherServer } from "../../../libs/pusher";
 
 export default defineEventHandler(async (event) => {
 
@@ -31,7 +32,24 @@ export default defineEventHandler(async (event) => {
             },
         });
 
-        return updatedUser
+
+        const users = await prisma.user.findMany({
+            orderBy: {
+                createdAt: 'desc'
+            },
+        });
+
+        users.map((user) => {
+            if (user?.email) {
+                pusherServer.trigger(user?.email!, 'update:profile', {
+                    id: updatedUser.id,
+                    name: updatedUser.name,
+                    image: updatedUser.image
+                });
+            }
+        });
+
+        return updatedUser;
     } catch (error) {
         throw createError({
             statusCode: 500,

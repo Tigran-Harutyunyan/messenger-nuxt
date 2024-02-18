@@ -88,6 +88,32 @@ const removeHandler = (conversationId: string) => {
   router.push("/conversations");
 };
 
+const profileUpdateHandler = ({
+  id,
+  name,
+  image,
+}: {
+  id: string;
+  name: string;
+  image: string;
+}) => {
+  items.value.forEach((conversation) => {
+    conversation.users.forEach((user) => {
+      if (user.id === id) {
+        user.image = image + "?" + new Date().valueOf();
+        user.name = name;
+      }
+    });
+    conversation.messages.forEach((msg) => {
+      msg.sender.image = "";
+      if (msg.sender && msg.sender.id === id) {
+        msg.sender.image = image + "?" + new Date().valueOf();
+        msg.sender.name = name;
+      }
+    });
+  });
+};
+
 onMounted(() => {
   if (!pusherKey.value) {
     return;
@@ -98,6 +124,7 @@ onMounted(() => {
   bindWithChunking(channel, "conversation:update", updateHandler);
   bindWithChunking(channel, "conversation:new", newHandler);
   pusherClient.bind("conversation:remove", removeHandler);
+  pusherClient.bind("update:profile", profileUpdateHandler);
 });
 
 onBeforeUnmount(() => {
@@ -105,6 +132,7 @@ onBeforeUnmount(() => {
   pusherClient.unbind("conversation:new", newHandler);
   pusherClient.unbind("conversation:remove", removeHandler);
   pusherClient.unbind("conversation:update", updateHandler);
+  pusherClient.unbind("update:profile", profileUpdateHandler);
 });
 </script>
 
