@@ -71,7 +71,7 @@ export default defineEventHandler(async (event) => {
     });
 
     // Update all connections with new seen  
-    triggerChunked(pusherServer, currentUser.email, "conversation-message", {
+    triggerChunked(pusherServer, currentUser.email, "conversation:update", {
         id: conversationId,
         messages: [updatedMessage]
     });
