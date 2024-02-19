@@ -15,15 +15,13 @@ useHead({
 
 const conversations = inject("conversations");
 
-const getConversation = () => {
+const conversation = computed(() => {
   if (conversations?.value && Array.isArray(conversations.value)) {
     return conversations.value?.find(
       (item) => item.id === conversationId.value
     );
   }
-};
-
-const conversation = getConversation();
+});
 </script>
 
 <template>

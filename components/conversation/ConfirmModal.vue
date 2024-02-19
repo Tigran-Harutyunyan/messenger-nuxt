@@ -2,7 +2,6 @@
 import Modal from "@/components/modals/Modal.vue";
 import Button from "@/components/Button.vue";
 import FiAlertTriangle from "@/components/ui/icons/FiAlertTriangle.vue";
-import useConversation from "@/composables/useConversation";
 import { DialogPanel } from "@headlessui/vue";
 import { useNotification } from "naive-ui";
 const notification = useNotification();
@@ -10,8 +9,6 @@ const notification = useNotification();
 interface ConfirmModalProps {
   isOpen?: boolean;
 }
-
-const { conversationId } = useConversation();
 
 const emit = defineEmits(["closeConfirm"]);
 
@@ -23,7 +20,7 @@ const onDelete = async () => {
   isLoading.value = true;
 
   try {
-    await $fetch(`/api/conversations/${conversationId.value}`, {
+    await $fetch(`/api/conversations/${useRoute().params.conversationId}`, {
       method: "DELETE",
     });
   } catch (error) {
