@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import axios from "axios";
 import Modal from "@/components/modals/Modal.vue";
 import Button from "@/components/Button.vue";
 import FiAlertTriangle from "@/components/ui/icons/FiAlertTriangle.vue";
@@ -23,19 +22,19 @@ const isLoading = ref(false);
 const onDelete = async () => {
   isLoading.value = true;
 
-  axios
-    .delete(`/api/conversations/${conversationId.value}`)
-    .then(() => {
-      emit("closeConfirm");
-    })
-    .catch(() => {
-      notification.error({
-        content: "Something went wrong!",
-        duration: 2500,
-        keepAliveOnHover: true,
-      });
-    })
-    .finally(() => (isLoading.value = false));
+  try {
+    await $fetch(`/api/conversations/${conversationId.value}`, {
+      method: "DELETE",
+    });
+  } catch (error) {
+    notification.error({
+      content: "Something went wrong!",
+      duration: 2500,
+      keepAliveOnHover: true,
+    });
+  } finally {
+    isLoading.value = false;
+  }
 };
 </script>
 

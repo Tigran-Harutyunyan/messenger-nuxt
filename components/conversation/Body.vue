@@ -1,44 +1,45 @@
 <script setup lang="ts">
-import type { FullMessageType, eventMessage } from "@/types";
+import type { FullMessageType } from "@/types";
 import MessageBox from "@/components/conversation/MessageBox.vue";
-import { useConversation } from "@/composables/useConversation";
 
 const { pusherClient } = useNuxtApp();
 
 interface BodyProps {
-  initialMessages: FullMessageType[];
+  messages: FullMessageType[];
 }
 
-const { initialMessages } = defineProps<BodyProps>();
-
-const messages = ref(initialMessages);
+const { messages } = defineProps<BodyProps>();
 
 const bottomRef = ref<null | HTMLDivElement>(null);
 
-const { conversationId } = useConversation();
+const getConversationId = () => {
+  return useRoute()?.params.conversationId;
+};
 
 const setSeen = async () => {
-  $fetch(`/api/conversations/${conversationId.value}/seen`, {
+  $fetch(`/api/conversations/${getConversationId()}/seen`, {
     method: "POST",
   });
 };
 
-const newMessageHandler = async (payload: eventMessage) => {
+const newMessageHandler = async () => {
   setSeen();
-  bottomRef.value?.scrollIntoView();
+  setTimeout(() => {
+    bottomRef.value?.scrollIntoView();
+  }, 200);
 };
 
 onMounted(() => {
   setSeen();
 
-  pusherClient.subscribe(conversationId.value);
+  pusherClient.subscribe(getConversationId());
   pusherClient.bind("message:new", newMessageHandler);
 
   bottomRef.value?.scrollIntoView();
 });
 
 onUnmounted(() => {
-  pusherClient.unsubscribe(conversationId.value);
+  pusherClient.unsubscribe(getConversationId());
   pusherClient.unbind("messages:new", newMessageHandler);
 });
 </script>

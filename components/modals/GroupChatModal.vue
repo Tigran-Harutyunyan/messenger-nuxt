@@ -2,7 +2,13 @@
 import { type User } from "@prisma/client";
 import Input from "@/components/inputs/Input.vue";
 import Modal from "@/components/modals/Modal.vue";
-import { useNotification } from "naive-ui";
+import {
+  useNotification,
+  NAvatar,
+  NTag,
+  type SelectRenderTag,
+  type SelectRenderLabel,
+} from "naive-ui";
 
 const notification = useNotification();
 
@@ -25,6 +31,7 @@ const options = computed(() => {
   return users.map((user) => ({
     value: user.id,
     label: user.name,
+    image: user.image,
   }));
 });
 
@@ -48,8 +55,7 @@ const onSubmit = async () => {
   isLoading.value = true;
 
   try {
-    let response: unknown;
-    response = await $fetch("/api/conversations", {
+    const response = await $fetch("/api/conversations", {
       method: "POST",
       body: {
         isGroup: true,
@@ -62,7 +68,7 @@ const onSubmit = async () => {
       },
     });
 
-    if (response?.id) {
+    if (response && typeof response === "object" && "id" in response) {
       notification.success({
         content: "Group chat is created",
         duration: 2500,
@@ -84,6 +90,86 @@ const onClose = () => {
   members.value = [];
   name.value = "";
   emit("close");
+};
+
+const renderMultipleSelectTag: SelectRenderTag = ({ option, handleClose }) => {
+  return h(
+    NTag,
+    {
+      style: {
+        padding: "0 6px 0 4px",
+      },
+      round: true,
+      closable: true,
+      onClose: (e) => {
+        e.stopPropagation();
+        handleClose();
+      },
+    },
+    {
+      default: () =>
+        h(
+          "div",
+          {
+            style: {
+              display: "flex",
+              alignItems: "center",
+            },
+          },
+          [
+            h(NAvatar, {
+              src: option.image || "/images/placeholder.jpg",
+              round: true,
+              size: 22,
+              style: {
+                marginRight: "4px",
+              },
+            }),
+            option.label as string,
+          ]
+        ),
+    }
+  );
+};
+const renderLabel: SelectRenderLabel = (option) => {
+  return h(
+    "div",
+    {
+      style: {
+        display: "flex",
+        alignItems: "center",
+      },
+    },
+    [
+      h(NAvatar, {
+        src: option.image || "/images/placeholder.jpg",
+        round: true,
+        size: "small",
+      }),
+      h(
+        "div",
+        {
+          style: {
+            marginLeft: "12px",
+            padding: "4px 0",
+          },
+        },
+        [
+          h(
+            "div",
+            {
+              style: {
+                marginLeft: "12px",
+                padding: "4px 0",
+              },
+            },
+            null,
+            [option.label as string]
+          ),
+        ]
+      ),
+    ]
+  );
 };
 </script>
 
@@ -109,20 +195,18 @@ const onClose = () => {
 
             <n-select
               v-model:value="members"
+              placement="top-start"
               multiple
               :options="options"
               clearable
+              :render-label="renderLabel"
+              :render-tag="renderMultipleSelectTag"
             />
           </div>
         </div>
       </div>
       <div class="mt-6 flex items-center justify-end gap-x-6">
-        <Button
-          :disabled="isLoading"
-          @click="emit('close')"
-          type="button"
-          secondary
-        >
+        <Button :disabled="isLoading" @click="onClose" type="button" secondary>
           Cancel
         </Button>
         <Button :disabled="isLoading" type="submit">

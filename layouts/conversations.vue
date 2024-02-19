@@ -47,13 +47,14 @@ const pusherKey = computed(() => {
 
 const updateHandler = async (payload: eventConversation) => {
   const conversation = getTransformedConversation(payload);
-  items.value = items.value.map((currentConversation, curreentIndex) => {
+
+  items.value.forEach((currentConversation) => {
     if (currentConversation.id === conversation.id) {
       if (!currentConversation.messages) {
         currentConversation.messages = [];
       }
 
-      let foundIndex;
+      let foundIndex = -1;
 
       currentConversation.messages.forEach((msg, index) => {
         if (msg.id === conversation.message.id) {
@@ -61,13 +62,12 @@ const updateHandler = async (payload: eventConversation) => {
         }
       });
 
-      if (foundIndex) {
+      if (foundIndex !== -1) {
         currentConversation.messages[foundIndex] = conversation.message;
       } else {
         currentConversation.messages.push(conversation.message);
       }
     }
-    return currentConversation;
   });
 };
 

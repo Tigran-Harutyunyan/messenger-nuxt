@@ -29,7 +29,7 @@ const conversation = getConversation();
 <template>
   <div class="h-full flex flex-col" v-if="conversation">
     <Header :conversation="conversation" />
-    <Body :initialMessages="conversation.messages" />
+    <Body :messages="conversation.messages" />
     <Form />
   </div>
 </template>

@@ -20,6 +20,10 @@ const onClick = (href: string) => {
   }
 };
 
+const onUpdate = (user: User) => {
+  updateUser(user);
+};
+
 onMounted(async () => {
   const res: unknown = await $fetch("/api/user", { method: "GET" });
 
@@ -34,7 +38,7 @@ onMounted(async () => {
     v-if="currentUser"
     :currentUser="currentUser"
     :isOpen="showSettingsModal"
-    @updated="((user:User) =>updateUser(user))"
+    @updated="onUpdate"
     @close="toggleSettingsModal(false)"
   />
   <div
