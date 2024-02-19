@@ -49,7 +49,7 @@ const { isOpen } = defineProps<ModalProps>();
             <DialogPanel
               class="relative transform overflow-hidden rounded-lg bg-white px-4 pb-4 pt-5 text-left shadow-xl transition-all w-full sm:my-8 sm:w-full sm:max-w-lg sm:p-6"
               ><span
-                class="p-1 border-0 hover:opacity-70 transition absolute right-3 top-5"
+                class="p-1 border-0 hover:opacity-70 transition absolute right-3 top-5 no-outline"
                 @click="emit('close')"
               >
                 <ModalCloseIcon

@@ -113,3 +113,7 @@ body > div:first-of-type {
 .n-dropdown-option {
   min-width: 200px; 
 }
+
+.no-outline {
+  outline: none!important;
+}

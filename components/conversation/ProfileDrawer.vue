@@ -92,7 +92,7 @@ const onCloseDrawer = () => {
                       <div class="ml-3 flex h-7 items-center">
                         <button
                           type="button"
-                          class="rounded-md bg-white text-gray-400 hover:text-gray-500"
+                          class="rounded-md bg-white text-gray-400 hover:text-gray-500 no-outline"
                           @click.stop="emit('close')"
                         >
                           <span class="sr-only">Close panel</span>
