@@ -1,6 +1,5 @@
 <script setup lang="ts">
-import { type FullMessageType } from "@/types";
-import { bindWithChunking } from "@/lib/utils";
+import type { FullMessageType, eventMessage } from "@/types";
 import MessageBox from "@/components/conversation/MessageBox.vue";
 import { useConversation } from "@/composables/useConversation";
 import { useMainStore } from "@/stores/main";
@@ -17,7 +16,7 @@ const { initialMessages } = defineProps<BodyProps>();
 
 const messages = ref(initialMessages);
 
-const bottomRef = ref(null);
+const bottomRef = ref<null | HTMLDivElement>(null);
 
 const { conversationId } = useConversation();
 
@@ -27,59 +26,93 @@ const setSeen = async () => {
   });
 };
 
-const messageHandler = async (message: FullMessageType) => {
-  setSeen();
+const transformMessage = (payload: eventMessage) => {
+  const {
+    i,
+    b: body,
+    c: createdAt,
+    si: senderId,
+    se: { n: name, e: email, im: image },
+  } = payload;
 
-  if (
-    messages.value &&
-    !messages.value.find((item) => item.id === message.id)
-  ) {
-    messages.value.push(message);
-  } else {
-    messages.value = [message];
-  }
+  return {
+    id: i,
+    body,
+    createdAt,
+    senderId,
+    conversationId: conversationId.value,
+    seen: [],
+    seenIds: [],
+    image: "",
+    sender: {
+      id: senderId,
+      name,
+      email,
+      image,
+      emailVerified: null,
+      seenMessageIds: [],
+      conversationIds: [],
+      updatedAt: "",
+    },
+  };
+};
 
+const newMessageHandler = async (payload: eventMessage) => {
+  //setSeen();
+  // const message: FullMessageType = transformMessage(payload);
+  // if (!messages.value.find((item) => item.id === message.id)) {
+  //   messages.value.push(message);
+  // }
   bottomRef.value?.scrollIntoView();
 };
 
-const updateMessageHandler = (newMessage: FullMessageType) => {
-  messages.value.map((currentMessage) => {
-    if (currentMessage.id === newMessage.id) {
-      return newMessage;
-    }
+const updateMessageHandler = (payload: eventMessage) => {
+  const newMg: FullMessageType = transformMessage(payload);
 
-    return currentMessage;
-  });
+  // messages.value.map((currentMessage) => {
+  //   if (currentMessage.id === newMg.id) {
+  //     return newMg;
+  //   }
+
+  //   return currentMessage;
+  // });
 };
+
+// watch(
+//   () => newMessagge?.value,
+//   () => {
+//     bottomRef.value?.scrollIntoView();
+//   }
+// );
 
 onMounted(() => {
   setSeen();
 
-  const channel = pusherClient.subscribe(conversationId.value);
-  bindWithChunking(channel, "message:new", messageHandler);
-  bindWithChunking(channel, "message:update", updateMessageHandler);
+  pusherClient.subscribe(conversationId.value);
+  pusherClient.bind("message:new", newMessageHandler);
+  pusherClient.bind("message:update", updateMessageHandler);
 
   bottomRef.value?.scrollIntoView();
 });
 
 onUnmounted(() => {
   pusherClient.unsubscribe(conversationId.value);
-  pusherClient.unbind("messages:new", messageHandler);
+  pusherClient.unbind("messages:new", newMessageHandler);
   pusherClient.unbind("message:update", updateMessageHandler);
 });
 
-watch(
-  () => newMessagge?.value,
-  (message) => {
-    if (
-      conversationId.value === message?.conversationId &&
-      !messages.value.find((item) => item.id === message.id)
-    ) {
-      messages.value.push(message);
-      bottomRef.value?.scrollIntoView();
-    }
-  }
-);
+// watch(
+//   () => newMessagge?.value,
+//   (message) => {
+//     if (
+//       conversationId.value === message?.conversationId &&
+//       !messages.value.find((item) => item.id === message.id)
+//     ) {
+//       messages.value.push(message);
+//       bottomRef.value?.scrollIntoView();
+//     }
+//   }
+// );
 </script>
 
 <template>
