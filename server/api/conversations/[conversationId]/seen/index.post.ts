@@ -2,7 +2,7 @@ import { getServerSession } from '#auth'
 import prisma from "../../../../../libs/prismadb";
 import { pusherServer } from "../../../../../libs/pusher";
 import getCurrentUser from "@/actions/getCurrentUser";
-import { triggerChunked } from "@/lib/utils";
+import { shortenMessage } from "@/lib/utils";
 
 export default defineEventHandler(async (event) => {
     const { conversationId } = getRouterParams(event)
@@ -70,11 +70,12 @@ export default defineEventHandler(async (event) => {
         }
     });
 
-    // Update all connections with new seen  
-    triggerChunked(pusherServer, currentUser.email, "conversation:update", {
-        id: conversationId,
-        messages: [updatedMessage]
-    });
+    // Update all connections with new seen
+    const payload = {
+        i: conversationId,
+        m: shortenMessage(updatedMessage)
+    }
+    pusherServer.trigger(currentUser.email!, "conversation:update", payload);
 
     // If user has already seen the message, no need to go further
     if (lastMessage.seenIds.indexOf(currentUser.id) !== -1) {
@@ -82,7 +83,7 @@ export default defineEventHandler(async (event) => {
     }
 
     // Update last message seen
-    triggerChunked(pusherServer, conversationId!, "message:update", updatedMessage);
+    pusherServer.trigger(conversationId!, "message:update", shortenMessage(updatedMessage));
 
     return 'Success';
 });

@@ -3,7 +3,7 @@ import { getServerSession } from '#auth'
 import { pusherServer } from "../../../libs/pusher";
 import prisma from "../../../libs/prismadb";
 import getCurrentUser from "@/actions/getCurrentUser";
-import { triggerChunked } from "@/lib/utils";
+import { shortenMessage } from "@/lib/utils";
 
 export default defineEventHandler(async (event) => {
     const {
@@ -67,15 +67,17 @@ export default defineEventHandler(async (event) => {
             }
         });
 
-        triggerChunked(pusherServer, conversationId!, "message:new", newMessage);
+        pusherServer.trigger(conversationId!, "message:new", shortenMessage(newMessage));
 
         const lastMessage = updatedConversation.messages[updatedConversation.messages.length - 1];
 
-        updatedConversation.users.map((user) => {
-            triggerChunked(pusherServer, user.email!, "conversation:update", {
-                id: conversationId,
-                messages: [lastMessage]
-            });
+        const payload = {
+            i: conversationId,
+            m: shortenMessage(lastMessage)
+        }
+
+        updatedConversation.users.map(async (user) => {
+            pusherServer.trigger(user.email!, "conversation:update", payload);
         });
 
         return newMessage;

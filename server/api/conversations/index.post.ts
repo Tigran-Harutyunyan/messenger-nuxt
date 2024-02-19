@@ -2,7 +2,7 @@ import { getServerSession } from '#auth'
 import { pusherServer } from "../../../libs/pusher";
 import prisma from "../../../libs/prismadb";
 import getCurrentUser from "@/actions/getCurrentUser";
-import { triggerChunked } from "@/lib/utils";
+import { shortenConversation } from "@/lib/utils";
 
 export default defineEventHandler(async (event) => {
     const session = await getServerSession(event);
@@ -58,7 +58,7 @@ export default defineEventHandler(async (event) => {
         //Update all connections with new conversation
         newConversation.users.forEach((user) => {
             if (user.email) {
-                triggerChunked(pusherServer, user.email!, "conversation:new", newConversation);
+                pusherServer.trigger(user.email!, "conversation:new", shortenConversation(newConversation));
             }
         });
 
@@ -109,7 +109,7 @@ export default defineEventHandler(async (event) => {
     //Update all connections with new conversation
     newConversation.users.map((user) => {
         if (user.email) {
-            triggerChunked(pusherServer, user.email!, "conversation:new", newConversation);
+            pusherServer.trigger(user.email!, "conversation:new", shortenConversation(newConversation));
         }
     });
 
