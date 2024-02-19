@@ -4,6 +4,13 @@ import Sidebar from "@/components/sidebar/Sidebar.vue";
 import ConversationList from "@/components/conversations/ConversationList.vue";
 import MdOutlineGroupAdd from "@/components/ui/icons/MdOutlineGroupAdd.vue";
 import GroupChatModal from "@/components/modals/GroupChatModal.vue";
+import { useMainStore } from "@/stores/main";
+import {
+  getTransformedNewConversation,
+  getTransformedConversation,
+} from "@/lib/utils";
+const { currentUser } = storeToRefs(useMainStore());
+
 import type {
   FullConversationType,
   eventConversation,
@@ -38,71 +45,10 @@ const pusherKey = computed(() => {
   return session?.value?.user?.email;
 });
 
-const transformConversation = (payload: eventConversation) => {
-  const {
-    i: cid,
-    m: {
-      i,
-      b: body,
-      c: createdAt,
-      si: senderId,
-      se: { n: name, e: email, im: image },
-    },
-  } = payload;
-
-  return {
-    id: cid,
-    message: {
-      id: i,
-      body,
-      createdAt,
-      senderId,
-      conversationId: cid,
-      seen: [],
-      seenIds: [],
-      image: "",
-      sender: {
-        id: senderId,
-        name,
-        email,
-        image,
-        emailVerified: null,
-        seenMessageIds: [],
-        conversationIds: [],
-        updatedAt: "",
-      },
-    },
-  };
-};
-
-const transformNewConversation = (payload: eventNewConversation) => {
-  // events come with miimum payload in order to avoid 413 error.need to transform to usable form.
-  const { i: id, ig: isGroup, n: name, u: userIds } = payload;
-
-  return {
-    id,
-    name,
-    isGroup,
-    users: users.value
-      ?.filter((user) => userIds.includes(user.id))
-      .map((user) => {
-        return {
-          id: user.id,
-          image: user.image,
-          name: user.name,
-        };
-      }),
-  };
-};
-
 const updateHandler = async (payload: eventConversation) => {
-  const conversation = transformConversation(payload);
-  let updateIndex = 0;
-
+  const conversation = getTransformedConversation(payload);
   items.value = items.value.map((currentConversation, curreentIndex) => {
     if (currentConversation.id === conversation.id) {
-      updateIndex = curreentIndex;
-
       if (!currentConversation.messages) {
         currentConversation.messages = [];
       }
@@ -126,7 +72,11 @@ const updateHandler = async (payload: eventConversation) => {
 };
 
 const newHandler = async (payload: eventNewConversation) => {
-  const conversation = transformNewConversation(payload);
+  const conversation = getTransformedNewConversation(
+    payload,
+    currentUser.value,
+    users.value
+  );
 
   if (!items.value.find((item) => item.id === conversation.id)) {
     items.value.unshift(conversation);

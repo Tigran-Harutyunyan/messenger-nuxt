@@ -4,32 +4,37 @@ import Avatar from "@/components/Avatar.vue";
 import { useRoutes } from "@/composables/useRoutes";
 import SettingsModal from "@/components/sidebar/SettingsModal.vue";
 import { useMainStore } from "@/stores/main";
-const { toggleSettingsModal } = useMainStore();
+import { type User } from "@prisma/client";
 
-const { showSettingsModal } = storeToRefs(useMainStore());
+const { toggleSettingsModal, updateUser } = useMainStore();
+
+const { showSettingsModal, currentUser } = storeToRefs(useMainStore());
 
 const { signOut } = useAuth();
 
-import { type User } from "@prisma/client";
-
-interface DesktopSidebarProps {
-  currentUser: User;
-}
 const routes = useRoutes();
-
-const { currentUser } = defineProps<DesktopSidebarProps>();
 
 const onClick = (href: string) => {
   if (href === "#") {
     signOut();
   }
 };
+
+onMounted(async () => {
+  const res: unknown = await $fetch("/api/user", { method: "GET" });
+
+  if (res && typeof res === "object" && "id" in res) {
+    updateUser(res as User);
+  }
+});
 </script>
 
 <template>
   <SettingsModal
+    v-if="currentUser"
     :currentUser="currentUser"
     :isOpen="showSettingsModal"
+    @updated="((user:User) =>updateUser(user))"
     @close="toggleSettingsModal(false)"
   />
   <div
@@ -62,14 +67,12 @@ const onClick = (href: string) => {
         @click="toggleSettingsModal(true)"
         class="cursor-pointer hover:opacity-75 transition"
       >
-        <ClientOnly>
-          <n-tooltip placement="right-end" trigger="hover" :show-arrow="false">
-            <template #trigger>
-              <Avatar :user="currentUser" v-if="currentUser" />
-            </template>
-            <span v-if="currentUser"> Update profile</span>
-          </n-tooltip>
-        </ClientOnly>
+        <n-tooltip placement="right-end" trigger="hover" :show-arrow="false">
+          <template #trigger>
+            <Avatar :user="currentUser" v-show="currentUser" />
+          </template>
+          <span v-if="currentUser"> Update profile</span>
+        </n-tooltip>
       </div>
     </nav>
   </div>

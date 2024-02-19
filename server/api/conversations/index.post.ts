@@ -55,12 +55,14 @@ export default defineEventHandler(async (event) => {
         });
 
 
-        //Update all connections with new conversation
-        newConversation.users.forEach((user) => {
+        // Update all connections with new conversation
+        newConversation.users.forEach(async (user) => {
             if (user.email) {
-                pusherServer.trigger(user.email!, "conversation:new", shortenConversation(newConversation));
+                await pusherServer.trigger(user.email!, "conversation:new", shortenConversation(newConversation));
             }
         });
+
+        console.log(newConversation)
 
         return newConversation;
     }

@@ -7,8 +7,6 @@ import { useNotification } from "naive-ui";
 
 const notification = useNotification();
 
-const { updateUser } = inject("user");
-
 interface SettingsModalProps {
   isOpen?: boolean;
   currentUser: User;
@@ -16,7 +14,7 @@ interface SettingsModalProps {
 
 const { isOpen, currentUser } = defineProps<SettingsModalProps>();
 
-const emit = defineEmits(["close"]);
+const emit = defineEmits(["close", "updated"]);
 
 const image = ref(currentUser?.image || "");
 const name = ref(currentUser?.name || "");
@@ -57,7 +55,7 @@ const onSubmit = async () => {
         keepAliveOnHover: true,
       });
 
-      updateUser(response);
+      emit("updated", response);
     }
 
     emit("close");

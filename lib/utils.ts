@@ -1,7 +1,7 @@
 import { type ClassValue, clsx } from 'clsx'
 import { twMerge } from 'tailwind-merge';
-import type { FullConversationType, FullMessageType } from "@/types";
-
+import type { FullConversationType, FullMessageType, eventConversation, eventNewConversation } from "@/types";
+import { type User } from "@prisma/client";
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))
 }
@@ -28,3 +28,63 @@ export function shortenConversation(conversation: Omit<FullConversationType, 'me
     u: conversation.userIds
   }
 }
+
+export function getTransformedConversation(payload: eventConversation) {
+  const {
+    i: cid,
+    m: {
+      i,
+      b: body,
+      c: createdAt,
+      si: senderId,
+      se: { n: name, e: email, im: image },
+    },
+  } = payload;
+
+  return {
+    id: cid,
+    message: {
+      id: i,
+      body,
+      createdAt,
+      senderId,
+      conversationId: cid,
+      seen: [],
+      seenIds: [],
+      image: "",
+      sender: {
+        id: senderId,
+        name,
+        email,
+        image,
+        emailVerified: null,
+        seenMessageIds: [],
+        conversationIds: [],
+        updatedAt: "",
+      },
+    },
+  };
+};
+
+
+export function getTransformedNewConversation(payload: eventNewConversation, currentUser: User, users: User[]) {
+  // events come with miimum payload in order to avoid 413 error.need to transform to usable form.
+  const { i: id, ig: isGroup, n: name, u: userIds } = payload;
+
+  const newUsers = users
+    ?.filter((user) => userIds.includes(user.id))
+    .map((user) => {
+      return {
+        id: user.id,
+        image: user.image,
+        name: user.name,
+      };
+    });
+  const data = {
+    id,
+    name,
+    isGroup,
+    users: [currentUser, ...newUsers],
+  };
+  return data;
+};

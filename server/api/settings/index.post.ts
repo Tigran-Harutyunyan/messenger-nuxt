@@ -39,9 +39,9 @@ export default defineEventHandler(async (event) => {
             },
         });
 
-        users.map((user) => {
+        users.map(async (user) => {
             if (user?.email) {
-                pusherServer.trigger(user?.email!, 'update:profile', {
+                await pusherServer.trigger(user?.email!, 'update:profile', {
                     id: updatedUser.id,
                     name: updatedUser.name,
                     image: updatedUser.image

@@ -75,7 +75,8 @@ export default defineEventHandler(async (event) => {
         i: conversationId,
         m: shortenMessage(updatedMessage)
     }
-    pusherServer.trigger(currentUser.email!, "conversation:update", payload);
+
+    await pusherServer.trigger(currentUser.email!, "conversation:update", payload);
 
     // If user has already seen the message, no need to go further
     if (lastMessage.seenIds.indexOf(currentUser.id) !== -1) {
@@ -83,7 +84,7 @@ export default defineEventHandler(async (event) => {
     }
 
     // Update last message seen
-    pusherServer.trigger(conversationId!, "message:update", shortenMessage(updatedMessage));
+    await pusherServer.trigger(conversationId!, "message:update", shortenMessage(updatedMessage));
 
     return 'Success';
 });
