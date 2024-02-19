@@ -67,7 +67,7 @@ export default defineEventHandler(async (event) => {
             }
         });
 
-        pusherServer.trigger(conversationId!, "message:new", shortenMessage(newMessage));
+        await pusherServer.trigger(conversationId!, "message:new", shortenMessage(newMessage));
 
         const lastMessage = updatedConversation.messages[updatedConversation.messages.length - 1];
 
@@ -77,7 +77,7 @@ export default defineEventHandler(async (event) => {
         }
 
         updatedConversation.users.map(async (user) => {
-            pusherServer.trigger(user.email!, "conversation:update", payload);
+            await pusherServer.trigger(user.email!, "conversation:update", payload);
         });
 
         return newMessage;
