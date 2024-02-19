@@ -37,6 +37,11 @@ const onImageUpload = (img: string) => {
 
 const sendMessage = async (body: object) => {
   isPosting.value = true;
+
+  setTimeout(() => {
+    isPosting.value = false;
+  }, 10000);
+
   try {
     await $fetch("/api/messages", {
       method: "POST",
