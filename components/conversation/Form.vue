@@ -5,6 +5,9 @@ import { useConversation } from "@/composables/useConversation";
 import ImageUpload from "@/components/ImageUpload.vue";
 import HiPaperAirplane from "~/components/ui/icons/HiPaperAirplane.vue";
 import { useMainStore } from "@/stores/main";
+import { useNotification } from "naive-ui";
+
+const notification = useNotification();
 
 const { showSettingsModal } = storeToRefs(useMainStore());
 
@@ -28,7 +31,6 @@ const onSubmit = async () => {
 
 const onImageUpload = (img: string) => {
   if (showSettingsModal.value) return; // workaround
-
   sendMessage({
     conversationId: conversationId.value,
     image: img,
@@ -36,20 +38,18 @@ const onImageUpload = (img: string) => {
 };
 
 const sendMessage = async (body: object) => {
-  isPosting.value = true;
-
-  setTimeout(() => {
-    isPosting.value = false;
-  }, 10000);
-
   try {
     await $fetch("/api/messages", {
       method: "POST",
       body,
     });
   } catch (error) {
-  } finally {
-    isPosting.value = false;
+    if (error?.message) {
+      notification.error({
+        content: error.message,
+        duration: 2500,
+      });
+    }
   }
 };
 </script>

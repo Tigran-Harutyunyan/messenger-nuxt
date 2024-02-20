@@ -12,7 +12,8 @@ export type FullConversationType = Conversation & {
 
 export interface eventMessage {
   i: String
-  b: string
+  b: string,
+  im: string
   c: Date
   si: string
   se: {

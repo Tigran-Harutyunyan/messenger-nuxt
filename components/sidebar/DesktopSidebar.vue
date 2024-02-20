@@ -25,6 +25,8 @@ const onUpdate = (user: User) => {
 };
 
 onMounted(async () => {
+  if (currentUser.value) return;
+
   const res: unknown = await $fetch("/api/user", { method: "GET" });
 
   if (res && typeof res === "object" && "id" in res) {

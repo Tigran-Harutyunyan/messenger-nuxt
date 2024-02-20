@@ -11,6 +11,7 @@ export function shortenMessage(message: FullMessageType) {
     i: message.id as string,
     b: message.body as string,
     c: message.createdAt as Date,
+    im: message.image as string,
     si: message.senderId as string,
     se: {
       n: message?.sender?.name as string,
@@ -35,6 +36,7 @@ export function getTransformedConversation(payload: eventConversation) {
     m: {
       i,
       b: body,
+      im: msgImage,
       c: createdAt,
       si: senderId,
       se: { n: name, e: email, im: image },
@@ -46,12 +48,12 @@ export function getTransformedConversation(payload: eventConversation) {
     message: {
       id: i,
       body,
+      image: msgImage,
       createdAt,
       senderId,
       conversationId: cid,
       seen: [],
       seenIds: [],
-      image: "",
       sender: {
         id: senderId,
         name,

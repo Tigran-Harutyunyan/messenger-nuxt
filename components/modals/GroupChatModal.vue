@@ -75,7 +75,7 @@ const onSubmit = async () => {
       });
     }
 
-    onClose();
+    close();
   } catch (error) {
     notification.error({
       content: "Something went wrong!",
@@ -86,7 +86,7 @@ const onSubmit = async () => {
   }
 };
 
-const onClose = () => {
+const close = () => {
   members.value = [];
   name.value = "";
   emit("close");
@@ -101,7 +101,7 @@ const renderMultipleSelectTag: SelectRenderTag = ({ option, handleClose }) => {
       },
       round: true,
       closable: true,
-      onClose: (e) => {
+      close: (e) => {
         e.stopPropagation();
         handleClose();
       },
@@ -174,7 +174,7 @@ const renderLabel: SelectRenderLabel = (option) => {
 </script>
 
 <template>
-  <Modal :isOpen="isOpen" @close="onClose">
+  <Modal :isOpen="isOpen" @close="close">
     <form @submit.prevent="onSubmit">
       <div class="space-y-12">
         <div class="border-b border-gray-900/10 pb-12">
@@ -206,7 +206,7 @@ const renderLabel: SelectRenderLabel = (option) => {
         </div>
       </div>
       <div class="mt-6 flex items-center justify-end gap-x-6">
-        <Button :disabled="isLoading" @click="onClose" type="button" secondary>
+        <Button :disabled="isLoading" @click="close" type="button" secondary>
           Cancel
         </Button>
         <Button :disabled="isLoading" type="submit">

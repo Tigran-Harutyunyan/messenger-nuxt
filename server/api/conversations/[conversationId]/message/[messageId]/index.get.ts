@@ -2,13 +2,13 @@ import prisma from "../../../../../../libs/prismadb";
 
 export default defineEventHandler(async (event) => {
 
-    const { messageId, conversationId } = event.context.params;
+    const params = event.context.params;
 
     try {
         const message = await prisma.message.findUnique({
             where: {
-                conversationId: conversationId as string,
-                id: messageId as string
+                conversationId: params?.conversationId as string,
+                id: params?.messageId as string
             },
             include: {
                 sender: true,

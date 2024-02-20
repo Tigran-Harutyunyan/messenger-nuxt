@@ -18,6 +18,7 @@ const isLoading = ref(false);
 
 const onDelete = async () => {
   isLoading.value = true;
+  emit("closeConfirm");
 
   try {
     await $fetch(`/api/conversations/${useRoute().params.conversationId}`, {

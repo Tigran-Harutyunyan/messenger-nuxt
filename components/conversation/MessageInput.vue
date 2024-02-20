@@ -8,10 +8,10 @@ interface MessageInputProps {
 const modelValue = defineModel();
 const { placeholder, id, type } = defineProps<MessageInputProps>();
 
-const inputRef = ref(null);
-onMounted(() => {
-  inputRef?.value.focus();
-});
+// const inputRef = ref(null);
+// onMounted(() => {
+//   inputRef?.value.focus();
+// });
 </script>
 
 <template>
