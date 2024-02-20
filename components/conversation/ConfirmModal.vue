@@ -59,7 +59,7 @@ const onDelete = async () => {
         </div>
       </div>
     </div>
-    <div class="mt-5 sm:mt-4 sm:flex flex justify-end">
+    <div class="mt-5 sm:mt-4 sm:flex flex justify-end gap-x-4">
       <Button :disabled="isLoading" secondary @click="emit('closeConfirm')">
         Cancel
       </Button>

@@ -86,7 +86,8 @@ export function getTransformedNewConversation(payload: eventNewConversation, cur
     id,
     name,
     isGroup,
-    users: [currentUser, ...newUsers],
+    users: [...newUsers],
   };
+  data.users.push(currentUser)
   return data;
 };

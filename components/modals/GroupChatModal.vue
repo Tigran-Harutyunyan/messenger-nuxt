@@ -101,7 +101,7 @@ const renderMultipleSelectTag: SelectRenderTag = ({ option, handleClose }) => {
       },
       round: true,
       closable: true,
-      close: (e) => {
+      onClose: (e: MouseEvent) => {
         e.stopPropagation();
         handleClose();
       },
@@ -177,14 +177,11 @@ const renderLabel: SelectRenderLabel = (option) => {
   <Modal :isOpen="isOpen" @close="close">
     <form @submit.prevent="onSubmit">
       <div class="space-y-12">
-        <div class="border-b border-gray-900/10 pb-12">
+        <div class="pb-8">
           <h2 class="text-base font-semibold leading-7 text-gray-900">
-            Create a group chat
+            New group chat
           </h2>
-          <p class="mt-1 text-sm leading-6 text-gray-600">
-            Create a chat with more than 2 people.
-          </p>
-          <div class="mt-10 flex flex-col gap-y-8">
+          <div class="mt-10 flex flex-col gap-y-4">
             <Input
               :disabled="isLoading"
               label="Name"
@@ -193,19 +190,27 @@ const renderLabel: SelectRenderLabel = (option) => {
               v-model="name"
             />
 
-            <n-select
-              v-model:value="members"
-              placement="top-start"
-              multiple
-              :options="options"
-              clearable
-              :render-label="renderLabel"
-              :render-tag="renderMultipleSelectTag"
-            />
+            <div>
+              <label
+                class="block text-sm font-medium leading-6 text-gray-900 mb-2"
+                >Users</label
+              >
+
+              <n-select
+                v-model:value="members"
+                placeholder="Select at least 2 users"
+                placement="top-start"
+                multiple
+                :options="options"
+                clearable
+                :render-label="renderLabel"
+                :render-tag="renderMultipleSelectTag"
+              />
+            </div>
           </div>
         </div>
       </div>
-      <div class="mt-6 flex items-center justify-end gap-x-6">
+      <div class="mt-6 flex items-center justify-end gap-x-4">
         <Button :disabled="isLoading" @click="close" type="button" secondary>
           Cancel
         </Button>
