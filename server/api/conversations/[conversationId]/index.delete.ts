@@ -46,18 +46,11 @@ export default defineEventHandler(async (event) => {
             },
         });
 
-        existingConversation.users.forEach(async (user) => {
+        for (const user of existingConversation.users) {
             if (user.email) {
                 await pusherServer.trigger(user.email, 'conversation:remove', existingConversation.id);
             }
-        });
-
-        existingConversation.users.forEach(async (user) => {
-            // in vercel there is a delay for some cases
-            if (user.email) {
-                await pusherServer.trigger(user.email, 'dummy:message', existingConversation.id);
-            }
-        });
+        }
 
         return deletedConversation
     } catch (error) {

@@ -56,17 +56,12 @@ export default defineEventHandler(async (event) => {
 
 
         // Update all connections with new conversation
-        newConversation.users.forEach(async (user) => {
+
+        for (const user of newConversation.users) {
             if (user.email) {
                 await pusherServer.trigger(user.email!, "conversation:new", shortenConversation(newConversation));
             }
-        });
-
-        newConversation.users.forEach(async (user) => {
-            if (user.email) {
-                await pusherServer.trigger(user.email!, "dummy:message", shortenConversation(newConversation));
-            }
-        });
+        }
 
         return newConversation;
     }
