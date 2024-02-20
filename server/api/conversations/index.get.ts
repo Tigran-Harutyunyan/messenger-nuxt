@@ -21,7 +21,8 @@ export default defineEventHandler(async (event) => {
                         id: true,
                         email: true,
                         image: true,
-                        name: true
+                        name: true,
+                        createdAt: true
                     }
                 },
                 messages: {
