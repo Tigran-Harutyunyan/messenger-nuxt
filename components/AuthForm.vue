@@ -12,6 +12,8 @@ const variant = ref<Variant>("LOGIN");
 
 const isLoading = ref(false);
 
+const showSocial = ref(false);
+
 const { signIn } = useAuth();
 
 const toggleVariant = () => {
@@ -59,9 +61,9 @@ const onSubmit = async (formData: form) => {
         body: formData,
       });
 
-      if (callback?.error) {
+      if (callback && typeof callback === "object" && "error" in callback) {
         notification.error({
-          content: callback?.error,
+          content: callback.error,
           duration: 2500,
           keepAliveOnHover: true,
         });
@@ -165,7 +167,7 @@ const onSubmit = async (formData: form) => {
           />
         </div>
       </FormKit>
-      <div class="mt-6">
+      <div class="mt-6" v-if="showSocial">
         <div class="relative">
           <div class="absolute inset-0 flex items-center">
             <div class="w-full border-t border-gray-300" />

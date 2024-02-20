@@ -11,9 +11,7 @@ Key Features:
 - Tailwind design for sleek UI
 - Tailwind animations and transition effects
 - Full responsiveness for all devices
-- Credential authentication with NUxtAuth
-- Google authentication integration
-- Github authentication integration
+- Credential authentication with NuxtAuth
 - File and image upload using Cloudinary CDN
 - Client form validation and handling using FormKit
 - Message read receipts
