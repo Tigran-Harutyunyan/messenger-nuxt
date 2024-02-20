@@ -81,16 +81,11 @@ const newHandler = async (payload: eventNewConversation) => {
   if (!items.value.find((item) => item.id === conversation.id)) {
     items.value.unshift(conversation);
   }
-
-  items.value = JSON.parse(JSON.stringify(items.value));
-  console.log("new handler");
 };
 
 const removeHandler = (conversationId: string) => {
   items.value = [...items.value.filter((conv) => conv.id !== conversationId)];
   router.push("/conversations");
-  items.value = JSON.parse(JSON.stringify(items.value));
-  console.log("remove handler");
 };
 
 const profileUpdateHandler = ({

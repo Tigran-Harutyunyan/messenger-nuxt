@@ -46,9 +46,9 @@ export default defineEventHandler(async (event) => {
             },
         });
 
-        existingConversation.users.forEach((user) => {
+        existingConversation.users.forEach(async (user) => {
             if (user.email) {
-                pusherServer.trigger(user.email, 'conversation:remove', existingConversation.id);
+                await pusherServer.trigger(user.email, 'conversation:remove', existingConversation.id);
             }
         });
 

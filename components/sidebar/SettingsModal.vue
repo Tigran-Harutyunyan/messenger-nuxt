@@ -107,7 +107,10 @@ const onSubmit = async () => {
                   alt="Avatar"
                 />
 
-                <ImageUpload @change="onImageUpload" label="Change" />
+                <ImageUpload
+                  @change="onImageUpload"
+                  label="Change profile image"
+                />
               </div>
             </div>
           </div>
