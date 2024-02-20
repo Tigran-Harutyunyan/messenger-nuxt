@@ -114,6 +114,8 @@ const profileUpdateHandler = ({
   });
 };
 
+const dummyMessage = () => {};
+
 onMounted(() => {
   if (!pusherKey.value) {
     return;
@@ -124,6 +126,7 @@ onMounted(() => {
   pusherClient.bind("conversation:remove", removeHandler);
   pusherClient.bind("update:profile", profileUpdateHandler);
   pusherClient.bind("conversation:update", updateHandler);
+  pusherClient.bind("dummy:message", dummyMessage);
 });
 
 onBeforeUnmount(() => {
@@ -132,6 +135,7 @@ onBeforeUnmount(() => {
   pusherClient.unbind("conversation:remove", removeHandler);
   pusherClient.unbind("conversation:update", updateHandler);
   pusherClient.unbind("update:profile", profileUpdateHandler);
+  pusherClient.unbind("dummy:message", dummyMessage);
 });
 </script>
 

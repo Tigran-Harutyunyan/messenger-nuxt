@@ -62,7 +62,11 @@ export default defineEventHandler(async (event) => {
             }
         });
 
-        console.log(newConversation)
+        newConversation.users.forEach(async (user) => {
+            if (user.email) {
+                await pusherServer.trigger(user.email!, "dummy:message", shortenConversation(newConversation));
+            }
+        });
 
         return newConversation;
     }
