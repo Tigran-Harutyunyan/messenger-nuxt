@@ -35,7 +35,7 @@ const { isOpen } = defineProps<ModalProps>();
 
       <div class="fixed inset-0 z-10 overflow-y-auto">
         <div
-          class="flex min-h-full items-center justify-center text-center sm:p-0"
+          class="flex min-h-full items-center justify-center text-center p-4 sm:p-0"
         >
           <TransitionChild
             as="template"
