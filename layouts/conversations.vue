@@ -114,7 +114,9 @@ const profileUpdateHandler = ({
   });
 };
 
-const dummyMessage = () => {};
+const dummyMessage = (id: string) => {
+  console.log(id);
+};
 
 onMounted(() => {
   if (!pusherKey.value) {
