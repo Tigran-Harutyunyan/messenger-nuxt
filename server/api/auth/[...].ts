@@ -2,7 +2,7 @@ import CredentialsProvider from 'next-auth/providers/credentials';
 import GoogleProvider from 'next-auth/providers/google'
 import { NuxtAuthHandler } from '#auth';
 import { compare } from "bcrypt-ts";
-import prisma from "../../../libs/prismadb";
+import prisma from "@/libs/prismadb";
 import { PrismaAdapter } from '@next-auth/prisma-adapter';
 
 export default NuxtAuthHandler({

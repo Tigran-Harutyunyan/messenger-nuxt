@@ -1,6 +1,6 @@
 import { getServerSession } from '#auth'
-import { pusherServer } from "../../../libs/pusher";
-import prisma from "../../../libs/prismadb";
+import { pusherServer } from "@/libs/pusher";
+import prisma from "@/libs/prismadb";
 import getCurrentUser from "@/actions/getCurrentUser";
 import { shortenConversation } from "@/lib/utils";
 

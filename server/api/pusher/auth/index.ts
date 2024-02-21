@@ -1,5 +1,5 @@
 import { getServerSession } from '#auth';
-import { pusherServer } from "../../../../libs/pusher";
+import { pusherServer } from "@/libs/pusher";
 
 export default defineEventHandler(async (event) => {
   const session = await getServerSession(event);

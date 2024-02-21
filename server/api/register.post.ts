@@ -1,5 +1,5 @@
 
-import prisma from "../../libs/prismadb";
+import prisma from "@/libs/prismadb";
 import { hashSync } from "bcrypt-ts";
 
 export default defineEventHandler(async (event) => {

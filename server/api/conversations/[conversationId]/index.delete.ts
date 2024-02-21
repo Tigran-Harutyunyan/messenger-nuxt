@@ -1,7 +1,7 @@
 import { getServerSession } from '#auth'
-import prisma from "../../../../libs/prismadb";
+import prisma from "@/libs/prismadb";
 import getCurrentUser from "@/actions/getCurrentUser";
-import { pusherServer } from "../../../../libs/pusher";
+import { pusherServer } from "@/libs/pusher";
 
 export default defineEventHandler(async (event) => {
     const { conversationId } = getRouterParams(event);
