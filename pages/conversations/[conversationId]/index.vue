@@ -13,13 +13,11 @@ useHead({
   title: "Conversation | Messenger",
 });
 
-const conversations = inject("conversations");
+const { data: items } = useNuxtData("items");
 
 const conversation = computed(() => {
-  if (conversations?.value && Array.isArray(conversations.value)) {
-    return conversations.value?.find(
-      (item) => item.id === conversationId.value
-    );
+  if (items?.value && Array.isArray(items.value)) {
+    return items.value?.find((item) => item.id === conversationId.value);
   }
 });
 </script>

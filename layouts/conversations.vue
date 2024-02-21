@@ -40,8 +40,6 @@ const { data: users } = useLazyAsyncData("users", () => $fetch("/api/users"), {
 
 const conversations = ref<FullConversationType[]>(items);
 
-provide("conversations", conversations);
-
 const pusherKey = computed(() => {
   return session?.value?.user?.email;
 });
