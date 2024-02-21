@@ -33,6 +33,7 @@ onMounted(() => {
   setSeen();
 
   pusherClient.subscribe(getConversationId());
+
   pusherClient.bind("message:new", newMessageHandler);
 
   bottomRef.value?.scrollIntoView();

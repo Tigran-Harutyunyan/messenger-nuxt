@@ -9,13 +9,14 @@ import {
   getTransformedNewConversation,
   getTransformedConversation,
 } from "@/lib/utils";
-const { currentUser } = storeToRefs(useMainStore());
-
+import ConversationSkeleton from "@/components/conversations/ConversationSkeleton.vue";
 import type {
   FullConversationType,
   eventConversation,
   eventNewConversation,
 } from "@/types";
+
+const { currentUser } = storeToRefs(useMainStore());
 
 const { data: session } = useAuth();
 
@@ -27,8 +28,8 @@ const isOpen = true;
 
 const router = useRouter();
 
-const { data: conversations, pending } = useLazyAsyncData(
-  "conversations",
+const { data: items, pending } = useLazyAsyncData(
+  "items",
   () => $fetch("/api/conversations"),
   { server: false }
 );
@@ -37,9 +38,9 @@ const { data: users } = useLazyAsyncData("users", () => $fetch("/api/users"), {
   server: false,
 });
 
-const items = ref<FullConversationType[]>(conversations);
+const conversations = ref<FullConversationType[]>(items);
 
-provide("conversations", items);
+provide("conversations", conversations);
 
 const pusherKey = computed(() => {
   return session?.value?.user?.email;
@@ -48,7 +49,7 @@ const pusherKey = computed(() => {
 const updateHandler = async (payload: eventConversation) => {
   const conversation = getTransformedConversation(payload);
 
-  items.value.forEach((currentConversation) => {
+  conversations.value.forEach((currentConversation) => {
     if (currentConversation.id === conversation.id) {
       if (!currentConversation.messages) {
         currentConversation.messages = [];
@@ -72,19 +73,25 @@ const updateHandler = async (payload: eventConversation) => {
 };
 
 const newHandler = async (payload: eventNewConversation) => {
+  if (!conversations.value) return;
+
   const conversation = getTransformedNewConversation(
     payload,
     currentUser.value,
     users.value
   );
 
-  if (!items.value.find((item) => item.id === conversation.id)) {
-    items.value.unshift(conversation);
+  if (!conversations.value.find((item) => item.id === conversation.id)) {
+    conversations.value.unshift(conversation);
   }
 };
 
 const removeHandler = (conversationId: string) => {
-  items.value = [...items.value.filter((conv) => conv.id !== conversationId)];
+  if (!conversations.value) return;
+
+  conversations.value = [
+    ...conversations.value.filter((conv) => conv.id !== conversationId),
+  ];
   router.push("/conversations");
 };
 
@@ -97,7 +104,9 @@ const profileUpdateHandler = ({
   name: string;
   image: string;
 }) => {
-  items.value.forEach((conversation) => {
+  if (!conversations.value) return;
+
+  conversations.value.forEach((conversation) => {
     conversation.users.forEach((user) => {
       if (user.id === id) {
         user.image = image + "?" + new Date().valueOf();
@@ -146,7 +155,7 @@ onBeforeUnmount(() => {
 
   <Sidebar>
     <ConversationList :items="items" v-if="conversations">
-      <n-tooltip placement="bottom-center" trigger="hover" :show-arrow="false">
+      <n-tooltip placement="bottom-end" trigger="hover" :show-arrow="false">
         <template #trigger>
           <div
             @click="isModalOpen = true"
@@ -158,6 +167,8 @@ onBeforeUnmount(() => {
         <span>Create a group chat </span>
       </n-tooltip>
     </ConversationList>
+
+    <ConversationSkeleton v-if="pending && !conversations" />
 
     <div
       :class="clsx('lg:pl-80 h-full lg:block', isOpen ? 'block' : 'hidden')"
