@@ -1,13 +1,15 @@
 <script setup lang="ts">
 import clsx from "clsx";
-import { type FullConversationType } from "../../types";
+import { type FullConversationType } from "@/types";
 import ConversationBox from "./ConversationBox.vue";
 import useConversation from "@/composables/useConversation";
+import ConversationSkeleton from "@/components/conversations/ConversationSkeleton.vue";
 
 interface ConversationListProps {
   items: FullConversationType[];
+  pending: boolean;
 }
-const { items } = defineProps<ConversationListProps>();
+const { items, pending } = defineProps<ConversationListProps>();
 
 const { conversationId, isOpen } = useConversation();
 </script>
@@ -37,13 +39,16 @@ const { conversationId, isOpen } = useConversation();
         <div class="text-2xl font-bold text-neutral-800">Messages</div>
         <slot />
       </div>
+      <ConversationSkeleton v-if="pending && !items" />
 
-      <ConversationBox
-        v-for="item in items"
-        :key="item.id"
-        :data="item"
-        :selected="conversationId === item.id"
-      />
+      <template v-else>
+        <ConversationBox
+          v-for="item in items"
+          :key="item.id"
+          :data="item"
+          :selected="conversationId === item.id"
+        />
+      </template>
     </div>
   </aside>
 </template>

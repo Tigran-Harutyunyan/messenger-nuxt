@@ -1,12 +1,14 @@
 <script setup lang="ts">
 import UserBox from "./UserBox.vue";
 import { type User } from "@prisma/client";
+import ConversationSkeleton from "@/components/conversations/ConversationSkeleton.vue";
 
 interface UserListProps {
   items: User[];
+  pending: boolean;
 }
 
-const { items } = defineProps<UserListProps>();
+const { items, pending } = defineProps<UserListProps>();
 </script>
 
 <template>
@@ -17,7 +19,10 @@ const { items } = defineProps<UserListProps>();
       <div class="flex-col">
         <div class="text-2xl font-bold text-neutral-800 py-4">People</div>
       </div>
-      <UserBox v-for="item in items" :key="item.id" :data="item" />
+      <ConversationSkeleton v-if="pending && !items" />
+      <template v-else>
+        <UserBox v-for="item in items" :key="item.id" :data="item" />
+      </template>
     </div>
   </aside>
 </template>

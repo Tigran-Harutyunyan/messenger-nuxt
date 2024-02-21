@@ -9,7 +9,6 @@ import {
   getTransformedNewConversation,
   getTransformedConversation,
 } from "@/lib/utils";
-import ConversationSkeleton from "@/components/conversations/ConversationSkeleton.vue";
 import type {
   FullConversationType,
   eventConversation,
@@ -152,7 +151,7 @@ onBeforeUnmount(() => {
   />
 
   <Sidebar>
-    <ConversationList :items="items" v-if="conversations">
+    <ConversationList :items="items" :pending="pending">
       <n-tooltip placement="bottom-end" trigger="hover" :show-arrow="false">
         <template #trigger>
           <div
@@ -166,13 +165,8 @@ onBeforeUnmount(() => {
       </n-tooltip>
     </ConversationList>
 
-    <ConversationSkeleton v-if="pending && !conversations" />
-
-    <div
-      :class="clsx('lg:pl-80 h-full lg:block', isOpen ? 'block' : 'hidden')"
-      v-if="!pending"
-    >
-      <slot />
+    <div :class="clsx('lg:pl-80 h-full lg:block', isOpen ? 'block' : 'hidden')">
+      <slot v-if="!pending" />
     </div>
   </Sidebar>
 </template>
