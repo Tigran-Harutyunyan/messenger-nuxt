@@ -12,7 +12,7 @@ const variant = ref<Variant>("LOGIN");
 
 const isLoading = ref(false);
 
-const showSocial = ref(false);
+const showSocial = ref(true);
 
 const { signIn } = useAuth();
 
@@ -178,11 +178,6 @@ const onSubmit = async (formData: form) => {
         </div>
 
         <div class="mt-6 flex gap-2">
-          <AuthSocialButton
-            :icon="GithubIcon"
-            @click="socialAction('github')"
-          />
-
           <AuthSocialButton
             :icon="GoogleIcon"
             @click="socialAction('google')"

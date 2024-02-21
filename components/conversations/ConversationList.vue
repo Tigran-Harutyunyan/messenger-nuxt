@@ -6,7 +6,7 @@ import useConversation from "@/composables/useConversation";
 import ConversationSkeleton from "@/components/conversations/ConversationSkeleton.vue";
 
 interface ConversationListProps {
-  items: FullConversationType[];
+  items: FullConversationType[] | null;
   pending: boolean;
 }
 const { items, pending } = defineProps<ConversationListProps>();
