@@ -16,6 +16,7 @@
     "@sidebase/nuxt-auth": "0.6.5",
     "@tailwindcss/forms": "^0.5.7",
     "nuxt": "^3.9.3",
+    "nuxt-delay-hydration": "^1.3.3",
     "nuxt-headlessui": "^1.1.5",
     "typescript": "^5.3.3",
     "vue": "^3.4.14",

@@ -1,7 +1,14 @@
 // https://nuxt.com/docs/api/configuration/nuxt-config
 export default defineNuxtConfig({
+  nitro: {
+    compressPublicAssets: true,
+    brotli: true,
+    prerender: {
+      crawlLinks: true
+    }
+  },
   devtools: { enabled: true },
-  modules: ['@nuxtjs/tailwindcss', '@sidebase/nuxt-auth', 'nuxt-headlessui', '@pinia/nuxt', '@nuxtjs/cloudinary', '@formkit/nuxt', '@nuxt/image', '@bg-dev/nuxt-naiveui'],
+  modules: ['@nuxtjs/tailwindcss', 'nuxt-delay-hydration', '@sidebase/nuxt-auth', 'nuxt-headlessui', '@pinia/nuxt', '@nuxtjs/cloudinary', '@formkit/nuxt', '@nuxt/image', '@bg-dev/nuxt-naiveui'],
   runtimeConfig: {
     public: {
       pusherPublicAppKey: process.env.NUXT_PUBLIC_PUSHER_APP_KEY
