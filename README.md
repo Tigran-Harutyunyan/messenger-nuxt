@@ -2,7 +2,9 @@
 
 This is a repository for a Real-Time Messenger : Nuxt3, Vue, Tailwind, Prisma, MongoDB, NuxtAuth, Pusher.
 
-# Demo - [Messenger](https://messenger-nuxt3.vercel.app)
+[Live Demo](https://messenger-nuxt3.vercel.app)
+
+<img width="1182" alt="Screen Shot 2023-07-10 at 11 27 03 PM" src="/assets/images/1.png">
 
 Key Features:
 
